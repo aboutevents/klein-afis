@@ -10,12 +10,20 @@ program.json ornegi:
  "nights": [
   {"key": "wed", "date": "18 KASIM ÇARŞAMBA", "tag": "RAVIN PROJECT PRESENTS", "tag_short": "RAVIN PROJECT",
    "head": "ANIL VARDARELI", "support": ["BİLGEHAN ÜNVER", "ORKUN GÜRSELOĞLU B2B EREN YZB"],
-   "doors": "21:00", "genre": "MELODIC · TECHNO"}
+   "doors": "21:00", "genre": "MELODIC · TECHNO",
+   "ig": {"head": ["anilvardareli"], "support": ["bilgehanunver", "orkun", "erenyzb"],
+          "org": ["ravinproject"], "other": []}}
  ]
 }
+"ig" = Instagram kullanici adlari (story'de gorunmeyen etiket). head: headliner(lar)in hesaplari
+(grup ise grubun + uyelerin), support: support DJ'ler, org: etkinlik organizatoru/sunan (varsa),
+other: diger ilgili hesaplar. Mekan (@kastel_istanbul) her story'ye otomatik eklenir.
+Etiket sirasi / sinir (en fazla 20): headliner -> mekan -> organizator -> support -> digerleri;
+sinira gelinirse sondan kesilir (mekan ve organizator hep kalir).
 "key": wed / fri / sat (baska gece varsa thu / sun; bunlar yalniz haftalik afise girer).
 Ciktilar (hafta klasorune): haftalik-story/-yatay, <key>-story/-yatay -> .png + .jpg + 24 sn .mp4,
 program.json kopyasi ve plan.json (scripts/post_story.py'nin okudugu gun -> dosya listesi).
+Sadece plan.json'u yeniden yazmak (cizmeden):  python3 kastel/kit/kastel_kit.py program.json <klasor> --plan
 Gerekenler: python playwright + chromium, Pillow, ffmpeg. Yazi tipleri depodaki kit/fonts'tan okunur.
 """
 import json, subprocess, sys
@@ -189,18 +197,40 @@ def render(html, w, h, out_base):
         f.unlink(missing_ok=True)
 
 
-def main():
-    prog = json.loads(Path(sys.argv[1]).read_text())
-    out = Path(sys.argv[2]).resolve()
-    render(weekly(prog, True), 1080, 1920, out / 'haftalik-story')
-    render(weekly(prog, False), 1920, 1080, out / 'haftalik-yatay')
-    for i, n in enumerate(prog['nights']):
-        render(daily(prog, n, i, True), 1080, 1920, out / f"{n['key']}-story")
-        render(daily(prog, n, i, False), 1920, 1080, out / f"{n['key']}-yatay")
-    keys = {n['key'] for n in prog['nights']}
-    has = lambda k: [f'{k}-story.png'] if k in keys else []
+VENUE = 'kastel_istanbul'
+MAX_TAGS = 20  # Instagram API: medya basina en fazla 20 etiket
+
+
+def _clean(xs):
+    seen, out = set(), []
+    for x in xs:
+        x = (x or '').strip().lstrip('@').lower()
+        if x and x not in seen:
+            seen.add(x); out.append(x)
+    return out
+
+
+def tags_for(nights):
+    """Oncelik: headliner(lar) -> mekan -> organizator -> support -> diger; en fazla MAX_TAGS."""
+    ig = [n.get('ig', {}) for n in nights]
+    head = _clean([u for g in ig for u in g.get('head', [])])
+    org = _clean([u for g in ig for u in g.get('org', [])])
+    rest = _clean([u for g in ig for u in g.get('support', [])] + [u for g in ig for u in g.get('other', [])])
+    fixed = _clean([VENUE] + org)
+    head = [u for u in head if u not in fixed]
+    rest = [u for u in rest if u not in fixed and u not in head]
+    room = MAX_TAGS - len(fixed)
+    head = head[:room]
+    rest = rest[:max(0, room - len(head))]
+    return head + fixed + rest
+
+
+def write_plan(prog, out):
+    nights = {n['key']: n for n in prog['nights']}
+    item = lambda f, ns: {'file': f, 'tags': tags_for(ns)}
+    has = lambda k: [item(f'{k}-story.png', [nights[k]])] if k in nights else []
     plan = {
-        'pazartesi': ['haftalik-story.png'],
+        'pazartesi': [item('haftalik-story.png', prog['nights'])],
         'sali': has('wed') + has('fri'),
         'carsamba': has('wed'),
         'persembe': has('sat'),
@@ -209,6 +239,19 @@ def main():
     }
     (out / 'plan.json').write_text(json.dumps(plan, ensure_ascii=False, indent=1))
     (out / 'program.json').write_text(json.dumps(prog, ensure_ascii=False, indent=1))
+
+
+def main():
+    prog = json.loads(Path(sys.argv[1]).read_text())
+    out = Path(sys.argv[2]).resolve()
+    if '--plan' in sys.argv[3:]:
+        write_plan(prog, out); print((out / 'plan.json').read_text()); return
+    render(weekly(prog, True), 1080, 1920, out / 'haftalik-story')
+    render(weekly(prog, False), 1920, 1080, out / 'haftalik-yatay')
+    for i, n in enumerate(prog['nights']):
+        render(daily(prog, n, i, True), 1080, 1920, out / f"{n['key']}-story")
+        render(daily(prog, n, i, False), 1920, 1080, out / f"{n['key']}-yatay")
+    write_plan(prog, out)
     print('\n'.join(sorted(str(p) for p in out.glob('*.png'))))
 
 

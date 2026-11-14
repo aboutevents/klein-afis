@@ -12,6 +12,16 @@ Depo: github.com/aboutevents/klein-afis (herkese açık — afişler zaten Insta
 Genel kurallar (kullanıcının kalıcı tercihleri):
 - Türkçe çalış. Marka adı "About Events". İçerikte alkol gösterme. Kullanıcının adını hiçbir içeriğe yazma.
 - Story'lerde DJ'ler ve mekân görünmeden etiketlenir (plan.json "tags"); afişin üstüne @isim/çıkartma/link konmaz (API link çıkartmasını desteklemez). "BU GECE" etiketi koyma.
+
+## ETİKET STANDARDI (kullanıcının kalıcı kuralı — Klein, Kastel ve tüm hesaplar için)
+- Her story'de o afişte sahne alan TÜM DJ'ler + mekân + (varsa) etkinlik organizatörü / sunan ("X PRESENTS") etiketlenir.
+  Grup/kolektif DJ ise grubun hesabı + üyelerinin hesapları. b2b'lerde iki DJ de.
+- Instagram sınırı medya başına 20 etiket. "tags" listesi öncelik sırasıyla yazılır:
+  1) headliner(lar) → 2) mekân → 3) organizatör → 4) support DJ'ler (afişteki sırayla) → 5) diğer ilgili hesaplar.
+  20'yi aşarsa sondan kesilir (post_story.py da kendisi keser); mekân ve organizatör hiçbir zaman düşmez.
+- Haftalık afiş: tüm gecelerin headliner'ları → mekân → tüm organizatörler → support'lar.
+- Hesapları şuralardan bul ve doğrula: mekânın o etkinlik için yaptığı Instagram gönderisinde etiketlenen/bahsedilen hesaplar
+  (en güvenilir), Bugece sanatçı sayfasındaki Instagram linki, RA sanatçı sayfası. Doğrulanamayan hesabı yazma, raporda belirt.
 - Sanatçı fotoğrafı: Google Görseller / RA (static.ra.co/images/profiles/square/<slug>.jpg genelde 1440px temiz; indirmede tarayıcı User-Agent'ı ve Referer https://ra.co/ gerekebilir) / basın sayfaları.
   Getty/Alamy filigranlı görselleri kullanma. Beatport `image_size/590x404` görselleri ORANI BOZUK (gerilmiş) olabilir: yüzler basık/geniş görünüyorsa kullanma.
   Mekân/etkinlik afişi kırpılacaksa yazı kısmı girmesin. Çizimden sonra her afişi gözle kontrol et.
@@ -35,7 +45,7 @@ Genel kurallar (kullanıcının kalıcı tercihleri):
 6. `plan.json` (sadece var olan dosyalar; değerler PNG adı, betik aynı adlı JPG'yi kullanır). Her girdi "dosya.png" ya da etiketli olabilir:
    `{"file": "dosya.png", "tags": ["kullaniciadi", ...]}` — etiketler görselde GÖRÜNMEZ (Instagram user_tags), hesaplar bildirim alır.
    Hesapları Bugece sanatçı/mekân sayfalarındaki Instagram linklerinden al (Klein: phonix.klein, klein.entertainment).
-   Haftalık afişte o haftanın tüm DJ'leri + mekân, günlük afişte o gecenin DJ'leri + mekân. Hesabı doğrulanamayanı yazma.
+   Haftalık afişte o haftanın tüm DJ'leri + mekân, günlük afişte o gecenin DJ'leri + mekân (+ organizatör). Sıra ve sınır: yukarıdaki ETİKET STANDARDI.
    Örnek (etiketli):
    ```json
    {"pazartesi": [{"file": "haftalik_dikey.png", "tags": ["dj1", "dj2", "phonix.klein", "klein.entertainment"]}],
@@ -45,7 +55,7 @@ Genel kurallar (kullanıcının kalıcı tercihleri):
     "cumartesi": [{"file": "cumartesi_dikey.png", "tags": ["..."]}]}
    ```
 7. `git add haftalar/<hafta> && git commit -m "Klein afişleri: <hafta>" && git push` (main). Push edilmezse story'ler paylaşılamaz — hata varsa açıkça raporla.
-8. PNG'leri kullanıcıya gönder (SendUserFile) + kısa Türkçe rapor (SendUserMessage): etkinlikler, eksik bilgi/fotoğraf, haftanın story takvimi.
+8. PNG'leri kullanıcıya gönder (SendUserFile) + kısa Türkçe rapor (SendUserMessage): etkinlikler, her story'nin etiket listesi, bulunamayan hesaplar, eksik bilgi/fotoğraf, haftanın story takvimi.
 
 ## GÖREV B — story paylaşımı (GitHub Actions)
 Otomatik. Elle test: GitHub → Actions → "Klein story paylaşımı" → Run workflow → mode=test (yayınlamaz) veya publish, isteğe bağlı tarih.
@@ -63,14 +73,18 @@ Kastel afişleri de bu depodan, aynı `scripts/post_story.py` ve aynı workflow 
 
 Story takvimi (kastel_kit.py plan.json'u kendisi yazar; etkinlik yoksa o gün boş kalır):
 - Pazartesi: haftalık · Salı: Çarşamba + Cuma etkinlikleri · Çarşamba: Çarşamba · Perşembe: Cumartesi · Cuma: Cuma · Cumartesi: Cumartesi
-- Etiket, müzik, link yok.
+- DJ'ler + @kastel_istanbul + (varsa) organizatör görünmeden etiketlenir (ETİKET STANDARDI). Müzik, link yok.
 
 ## GÖREV K — Pazar gecesi: Kastel afişlerini hazırla
 1. Depoyu klonla. Hafta = yarından (Pazartesi) Pazar'a. Klasör: `kastel/haftalar/<Pazartesi tarihi>_hafta`. Klasörde zaten JPG'ler + plan.json varsa işi tekrarlama, sadece raporla.
 2. Etkinlikleri bul: https://bugece.co/tr/venue/kastel → o haftaki her etkinlik sayfasının "LINE-UP" listesi, tarih, Açılış saati, Genre, sunan (ör. "BEATGATE PRESENTS"). Kastel Instagram (@kastel_istanbul) açıklamaları ve aylık takvim görseliyle karşılaştır; çelişkide Bugece LINE-UP'ı esas al, raporda belirt.
 3. `program.json` yaz (biçim `kastel_kit.py` başında). İsimler BÜYÜK HARF, Türkçe karakterler doğru; lineup'ı yazıldığı gibi kullan. A–Z (headliner'sız) gecede listedeki ilk isim `head`. b2b'ler "X B2B Y" tek öğe.
+   Her geceye `"ig"` ekle: `{"head": [...], "support": [...], "org": [...], "other": [...]}` (Instagram kullanıcı adları, ETİKET STANDARDI).
+   Hesapları @kastel_istanbul'un o gece için paylaştığı gönderide etiketlenenlerden al (tarayıcıda gönderiyi aç; sayfa HTML'indeki
+   "usertags" ve açıklamadaki @'ler), sonra Bugece/RA ile tamamla. Mekân otomatik eklenir. kastel_kit.py sırayı ve 20 sınırını uygular.
+   Sonradan sadece etiket düzeltmek için: `python3 kastel/kit/kastel_kit.py program.json kastel/haftalar/<hafta> --plan` (çizmeden plan.json yazar).
 4. Çiz: `python3 kastel/kit/kastel_kit.py program.json kastel/haftalar/<hafta>` (~6 dk; playwright + chromium, Pillow, ffmpeg). Her PNG'yi aç: isim taşması, okunurluk.
 5. `git add kastel/haftalar/<hafta> && git commit -m "Kastel afişleri: <hafta>" && git push` (main). Push olmazsa story'ler paylaşılamaz — açıkça raporla.
-6. PNG + MP4'leri kullanıcıya gönder (SendUserFile) + kısa Türkçe rapor: program tablosu, kaynaklar, belirsizlikler, story takvimi.
+6. PNG + MP4'leri kullanıcıya gönder (SendUserFile) + kısa Türkçe rapor: program tablosu, her story'nin etiket listesi, bulunamayan hesaplar, kaynaklar, belirsizlikler, story takvimi.
 
 Elle test: Actions → "Klein story paylaşımı" → Run workflow → hesap=kastel, mode=test (yayınlamaz), isteğe bağlı tarih.

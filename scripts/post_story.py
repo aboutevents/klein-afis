@@ -2,7 +2,8 @@
 
 GitHub Actions her gün (Pzt–Cmt) çalıştırır. Bugünün gününe göre
 haftalar/<Pazartesi>_hafta/plan.json içindeki görselleri abouteventsorg
-Instagram hesabına story olarak paylaşır. Etiket/metin eklemez.
+Instagram hesabına story olarak paylaşır. plan.json'daki "tags" görünmeyen etiket
+(user_tags) olarak eklenir; metin/çıkartma eklenmez.
 
 Ortam değişkenleri:
   IG_TOKEN    : Meta sistem kullanıcısı erişim anahtarı (GitHub Secrets)
@@ -21,6 +22,7 @@ MODE = (os.environ.get("MODE") or "publish").strip().lower()
 REPO = os.environ.get("GITHUB_REPOSITORY", "aboutevents/klein-afis")
 SHA = os.environ.get("GITHUB_SHA", "main")
 BASES = [b.strip().strip("/") for b in (os.environ.get("BASE") or "haftalar").split(",") if b.strip()]
+MAX_TAGS = 20  # Instagram API: medya başına en fazla 20 @ etiket
 GUNLER = ["pazartesi", "sali", "carsamba", "persembe", "cuma", "cumartesi", "pazar"]
 
 
@@ -73,7 +75,12 @@ def post_week(week, today, gun):
     for entry in files:
         # plan.json girdisi "dosya.png" ya da {"file": "dosya.png", "tags": ["kullaniciadi", ...]} olabilir
         f = entry["file"] if isinstance(entry, dict) else entry
-        tags = [t.lstrip("@").strip() for t in (entry.get("tags", []) if isinstance(entry, dict) else []) if t.strip()]
+        # Etiketler plan.json'da öncelik sırasıyla durur (headliner → mekân → organizatör → support → diğer);
+        # Instagram sınırı 20: tekrarlar atılır, fazlası sondan kesilir.
+        tags = list(dict.fromkeys(t.lstrip("@").strip().lower() for t in (entry.get("tags", []) if isinstance(entry, dict) else []) if t.strip()))
+        if len(tags) > MAX_TAGS:
+            print(f"UYARI: {len(tags)} etiket var, ilk {MAX_TAGS} kullanılıyor; atlanan: {', '.join(tags[MAX_TAGS:])}")
+            tags = tags[:MAX_TAGS]
         jpg = os.path.splitext(f)[0] + ".jpg"
         if not os.path.exists(f"{week}/{jpg}"):
             raise SystemExit(f"Görsel bulunamadı: {week}/{jpg}")
