@@ -1,0 +1,47 @@
+{
+ "week_dates": "11–14 KASIM",
+ "week_days": "ÇARŞAMBA, CUMA & CUMARTESİ",
+ "nights": [
+  {
+   "key": "wed",
+   "date": "11 KASIM ÇARŞAMBA",
+   "tag": "RAVIN PROJECT PRESENTS",
+   "tag_short": "RAVIN PROJECT",
+   "head": "ANIL VARDARELI",
+   "support": [
+    "BİLGEHAN ÜNVER",
+    "ORKUN GÜRSELOĞLU B2B EREN YZB",
+    "HALİT ÖZERDEM B2B İSMAİL NUREL"
+   ],
+   "doors": "21:00",
+   "genre": "MELODIC · TECHNO"
+  },
+  {
+   "key": "fri",
+   "date": "13 KASIM CUMA",
+   "tag": "BEATGATE PRESENTS",
+   "tag_short": "BEATGATE",
+   "head": "DORIAN CRAFT B2B BARON",
+   "support": [
+    "ZOE DONA",
+    "TITA",
+    "FIRAT ORAL"
+   ],
+   "doors": "22:00",
+   "genre": "HOUSE"
+  },
+  {
+   "key": "sat",
+   "date": "14 KASIM CUMARTESİ",
+   "tag": "KASTEL MAIN STAGE",
+   "tag_short": "MAIN STAGE",
+   "head": "PEOPLE LIKE US",
+   "support": [
+    "GÜNEŞ ERGÜN",
+    "MANENDRIA"
+   ],
+   "doors": "22:00",
+   "genre": "AFRO · HOUSE · MINIMAL"
+  }
+ ]
+}

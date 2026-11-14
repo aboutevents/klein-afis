@@ -1,0 +1,21 @@
+{
+ "pazartesi": [
+  "haftalik-story.png"
+ ],
+ "sali": [
+  "wed-story.png",
+  "fri-story.png"
+ ],
+ "carsamba": [
+  "wed-story.png"
+ ],
+ "persembe": [
+  "sat-story.png"
+ ],
+ "cuma": [
+  "fri-story.png"
+ ],
+ "cumartesi": [
+  "sat-story.png"
+ ]
+}
