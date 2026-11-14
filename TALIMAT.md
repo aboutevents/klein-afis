@@ -55,7 +55,10 @@ Genel kurallar (kullanıcının kalıcı tercihleri):
     "cumartesi": [{"file": "cumartesi_dikey.png", "tags": ["..."]}]}
    ```
 7. `git add haftalar/<hafta> && git commit -m "Klein afişleri: <hafta>" && git push` (main). Push edilmezse story'ler paylaşılamaz — hata varsa açıkça raporla.
-8. PNG'leri kullanıcıya gönder (SendUserFile) + kısa Türkçe rapor (SendUserMessage): etkinlikler, her story'nin etiket listesi, bulunamayan hesaplar, eksik bilgi/fotoğraf, haftanın story takvimi.
+8. TAKİP ÖNERİSİ: Instagram API takip etmeyi ve takip edilenleri görmeyi desteklemez, bu yüzden otomatik takip YAPMA.
+   Bu haftanın etiket listesindeki hesaplardan `takip_listesi.txt`'de OLMAYANLARI raporda "Takip edilecek yeni DJ'ler" başlığıyla
+   https://instagram.com/<kullaniciadi> linkleriyle listele (yoksa "bu hafta yeni isim yok" yaz), sonra bu hesapları takip_listesi.txt'ye ekleyip commit et.
+9. PNG'leri kullanıcıya gönder (SendUserFile) + kısa Türkçe rapor (SendUserMessage): etkinlikler, her story'nin etiket listesi, bulunamayan hesaplar, eksik bilgi/fotoğraf, haftanın story takvimi.
 
 ## GÖREV B — story paylaşımı (GitHub Actions)
 Otomatik. Elle test: GitHub → Actions → "Klein story paylaşımı" → Run workflow → mode=test (yayınlamaz) veya publish, isteğe bağlı tarih.

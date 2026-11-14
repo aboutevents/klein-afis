@@ -1,0 +1,9 @@
+# Takip önerisi olarak Pazar raporunda listelenmiş Instagram hesapları (her satır bir kullanıcı adı).
+# Bu listedekiler tekrar önerilmez. Takip edilmemesi gerekenleri de buraya ekleyebilirsin.
+phonix.klein
+klein.entertainment
+beticalmusic
+doruksengun
+fideles_music
+ccinni_____
+barisberber
