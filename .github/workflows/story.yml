@@ -2,8 +2,8 @@ name: Klein story paylaşımı
 
 on:
   schedule:
-    # 07:50 UTC = 10:50 İstanbul (Pzt–Cmt) → Klein Phönix (haftalar/). Story ~11:00'de düşer.
-    - cron: "50 7 * * 1-6"
+    # 07:50 UTC = 10:50 İstanbul → Klein Phönix (haftalar/). Story ~11:00'de düşer (Pazar plan boş: sadece istatistik toplanır).
+    - cron: "50 7 * * *"
     # 09:50 UTC = 12:50 İstanbul (Pzt–Cmt) → Kastel (kastel/haftalar/). Story ~13:00'te düşer.
     - cron: "50 9 * * 1-6"
   workflow_dispatch:
@@ -35,6 +35,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
+      - name: Dünkü story istatistiklerini kaydet
+        continue-on-error: true
+        env:
+          IG_TOKEN: ${{ secrets.IG_TOKEN }}
+        run: python3 scripts/collect_insights.py
       - name: Story paylaş
         env:
           IG_TOKEN: ${{ secrets.IG_TOKEN }}
@@ -45,10 +50,11 @@ jobs:
       - name: Paylaşım kaydını kaydet
         if: always()
         run: |
-          if [ -n "$(git status --porcelain haftalar kastel/haftalar)" ]; then
+          if [ -n "$(git status --porcelain haftalar kastel/haftalar performans.csv)" ]; then
             git config user.name "klein-story-bot"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git add haftalar kastel/haftalar
+            [ -f performans.csv ] && git add performans.csv
             git commit -m "Story paylaşım kaydı $(date -u +%F)"
             git pull --rebase --autostash || true
             git push

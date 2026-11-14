@@ -58,7 +58,11 @@ Genel kurallar (kullanıcının kalıcı tercihleri):
 8. TAKİP ÖNERİSİ: Instagram API takip etmeyi ve takip edilenleri görmeyi desteklemez, bu yüzden otomatik takip YAPMA.
    Bu haftanın etiket listesindeki hesaplardan `takip_listesi.txt`'de OLMAYANLARI raporda "Takip edilecek yeni DJ'ler" başlığıyla
    https://instagram.com/<kullaniciadi> linkleriyle listele (yoksa "bu hafta yeni isim yok" yaz), sonra bu hesapları takip_listesi.txt'ye ekleyip commit et.
-9. PNG'leri kullanıcıya gönder (SendUserFile) + kısa Türkçe rapor (SendUserMessage): etkinlikler, her story'nin etiket listesi, bulunamayan hesaplar, eksik bilgi/fotoğraf, haftanın story takvimi.
+9. PERFORMANS: depodaki `performans.csv` (her sabah GitHub Actions doldurur: reach=erişim, views=görüntülenme, replies=yanıt,
+   navigation=ileri/geri/çıkış dokunuşları, profile_visits=profil ziyareti, follows=takip, shares=paylaşım, total_interactions).
+   Raporda GEÇEN HAFTANIN story'lerini özetle: her story için tarih, afiş, erişim, profil ziyareti, takip, yanıt; haftalık toplam/ortalama;
+   en iyi ve en zayıf story; Klein ve Kastel ayrı. Önceki haftayla kıyasla (varsa). Veri yoksa nedenini söyle (ör. izin/anahtar sorunu).
+10. PNG'leri kullanıcıya gönder (SendUserFile) + kısa Türkçe rapor (SendUserMessage): etkinlikler, her story'nin etiket listesi, bulunamayan hesaplar, eksik bilgi/fotoğraf, haftanın story takvimi.
 
 ## GÖREV B — story paylaşımı (GitHub Actions)
 Otomatik. Elle test: GitHub → Actions → "Klein story paylaşımı" → Run workflow → mode=test (yayınlamaz) veya publish, isteğe bağlı tarih.
