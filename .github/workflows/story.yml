@@ -27,7 +27,7 @@ jobs:
   story:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Story paylaş
         env:
           IG_TOKEN: ${{ secrets.IG_TOKEN }}

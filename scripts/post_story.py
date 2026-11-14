@@ -42,7 +42,7 @@ def main():
         raise SystemExit("IG_TOKEN tanımlı değil (GitHub > Settings > Secrets and variables > Actions).")
     d = os.environ.get("DATE", "").strip()
     today = (datetime.date.fromisoformat(d) if d
-             else (datetime.datetime.utcnow() + datetime.timedelta(hours=3)).date())
+             else (datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=3)).date())
     monday = today - datetime.timedelta(days=today.weekday())
     gun = GUNLER[today.weekday()]
     week = f"haftalar/{monday.isoformat()}_hafta"
@@ -84,7 +84,7 @@ def main():
             print(f"TEST OK: {jpg} için story taslağı hazırlandı ({cid}), YAYINLANMADI.")
             continue
         p = call("POST", f"{IG_USER_ID}/media_publish", {"creation_id": cid})
-        now = (datetime.datetime.utcnow() + datetime.timedelta(hours=3)).strftime("%H:%M")
+        now = (datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=3)).strftime("%H:%M")
         with open(log_path, "a", encoding="utf-8") as lf:
             lf.write(f"{today.isoformat()} {now} {jpg} OK {p.get('id')}\n")
         print("PAYLAŞILDI:", jpg, p.get("id"))
