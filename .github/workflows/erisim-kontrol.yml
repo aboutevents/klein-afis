@@ -1,0 +1,14 @@
+name: Erişim kontrolü (yayınlamaz)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Jetonun eriştiği sayfa ve Instagram hesapları
+        env:
+          IG_TOKEN: ${{ secrets.IG_TOKEN }}
+        run: python3 scripts/check_access.py
