@@ -2,3 +2,4 @@ __pycache__/
 *.pyc
 *.__render.html
 kastel/haftalar/**/*.mp4
+kastel/haftalar/**/_foto/

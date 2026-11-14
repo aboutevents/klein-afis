@@ -15,6 +15,9 @@ program.json ornegi:
           "org": ["ravinproject"], "other": []}}
  ]
 }
+"photo" = (istege bagli) SADECE headliner'in fotografi: https adresi ya da program.json'a gore dosya yolu.
+Yazisiz, yuzu net bir basin fotografi olsun (Bugece sanatci sayfasi/RA/resmi site; afis kullanilacaksa yazisiz kismi kirpilir).
+"photo_pos" = (istege bagli) CSS object-position, varsayilan "50% 30%" — yuz kadrajda kalsin.
 "ig" = Instagram kullanici adlari (story'de gorunmeyen etiket). head: headliner(lar)in hesaplari
 (grup ise grubun + uyelerin), support: support DJ'ler, org: etkinlik organizatoru/sunan (varsa),
 other: diger ilgili hesaplar. Mekan (@kastel_istanbul) her story'ye otomatik eklenir.
@@ -26,7 +29,7 @@ program.json kopyasi ve plan.json (scripts/post_story.py'nin okudugu gun -> dosy
 Sadece plan.json'u yeniden yazmak (cizmeden):  python3 kastel/kit/kastel_kit.py program.json <klasor> --plan
 Gerekenler: python playwright + chromium, Pillow, ffmpeg. Yazi tipleri depodaki kit/fonts'tan okunur.
 """
-import json, subprocess, sys
+import hashlib, json, subprocess, sys, urllib.request
 from pathlib import Path
 from playwright.sync_api import sync_playwright
 from PIL import Image
@@ -57,6 +60,40 @@ def photo_layer(i, shade=0.62):
 <img src="file://{A/f}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:grayscale(1) {bf}">
 <div style="position:absolute;inset:0;background:{RED};mix-blend-mode:multiply;opacity:.85"></div>
 <div style="position:absolute;inset:0;background:rgba(17,17,17,{shade})"></div></div>'''
+
+
+PHOTO_DIR = None  # main() ayarlar: indirilen fotograflar
+
+
+def head_photo(n):
+    """Night'in headliner fotografi icin file:// adresi (yoksa None)."""
+    src = (n.get('photo') or '').strip()
+    if not src:
+        return None
+    if src.startswith('http'):
+        PHOTO_DIR.mkdir(parents=True, exist_ok=True)
+        f = PHOTO_DIR / (hashlib.md5(src.encode()).hexdigest()[:10] + '.img')
+        if not f.exists():
+            req = urllib.request.Request(src, headers={'User-Agent': 'Mozilla/5.0'})
+            f.write_bytes(urllib.request.urlopen(req, timeout=60).read())
+        jpg = f.with_suffix('.jpg')
+        if not jpg.exists():
+            Image.open(f).convert('RGB').save(jpg, quality=92)
+        return jpg
+    p = Path(src)
+    if not p.is_absolute():
+        p = (PROG_DIR / p).resolve()
+    return p if p.exists() else None
+
+
+def photo_box(n, style):
+    p = head_photo(n)
+    if not p:
+        return ''
+    pos = n.get('photo_pos', '50% 30%')
+    return f'''<div style="position:relative;overflow:hidden;background:#111;{style}">
+<img src="file://{p}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:{pos};filter:grayscale(1) contrast(1.1) brightness(1.05)">
+<div style="position:absolute;inset:0;background:{RED};mix-blend-mode:multiply;opacity:.55"></div></div>'''
 
 
 def frame(w, h, title_grey, date_line, inner):
@@ -90,10 +127,11 @@ html,body{{margin:0;background:transparent}}</style></head><body>
 {foot}</div></body></html>'''
 
 
-def card(i, n, pad, top, main, sup, supsize, tag):
-    return f'''<div style="position:relative;overflow:hidden;background:#111;min-width:0;min-height:0">{photo_layer(i)}
-<div style="position:absolute;inset:0;padding:{pad};display:flex;flex-direction:column;justify-content:space-between">
-<div style="display:flex;justify-content:space-between;gap:16px;{MONO};font-size:{top}px"><div style="color:{RED}">{n['date']}</div><div style="opacity:.8;text-align:right">{tag}</div></div>
+def card(i, n, pad, top, main, sup, supsize, tag, right=0):
+    side = photo_box(n, f'position:absolute;top:0;right:0;bottom:0;width:{right}px') if right else ''
+    return f'''<div style="position:relative;overflow:hidden;background:#111;min-width:0;min-height:0">{photo_layer(i)}{side}
+<div style="position:absolute;inset:0;{f'right:{right}px;' if right else ''}padding:{pad};display:flex;flex-direction:column;justify-content:space-between">
+<div style="display:flex;{'flex-direction:column;gap:8px' if right else 'justify-content:space-between;gap:16px'};{MONO};font-size:{top}px"><div style="color:{RED}">{n['date']}</div><div style="opacity:.8;{'' if right else 'text-align:right'}">{tag}</div></div>
 {main}
 <div style="{MONO};font-size:{supsize}px;line-height:1.5">{sup}</div></div></div>'''
 
@@ -103,21 +141,35 @@ def weekly(prog, story):
     cards = []
     for i, n in enumerate(nights):
         if story:
-            hs = fit(n['head'], 832, 104)
+            ph = head_photo(n)
+            width = 470 if ph else 832
+            hs = fit(n['head'], width, 104)
             head = n['head'] if hs >= 60 else split_b2b(n['head'])
-            hs = fit(head, 832, 104)
+            hs = fit(head, width, 104)
             main = f'<div style="{COND};font-size:{hs}px;line-height:.9;white-space:nowrap">{head}</div>'
-            sup = ' · '.join(n.get('support', []))
-            cards.append(card(i, n, '40px 44px', 24, main, sup, 22, n['tag']))
+            sups = n.get('support', [])
+            if ph:
+                sup = '<br>'.join(sups)
+                c = card(i, n, '40px 44px', 24, main, sup, 30, n['tag'], right=380)
+            else:
+                sup = ' · '.join(sups)
+                c = card(i, n, '40px 44px', 24, main, sup, 30 if len(sup) <= 44 else 26, n['tag'])
+            cards.append(c)
         else:
-            hs = fit(n['head'], 474, 74)
+            side = 330 if (len(nights) <= 2 and head_photo(n)) else 0
+            width = 436 if side else 474
+            hs = fit(n['head'], width, 74)
             head = n['head']
             if hs < 52:
                 head = split_b2b(n['head'])
-                hs = fit(head, 474, 74)
+                hs = fit(head, width, 74)
             main = f'<div style="{COND};font-size:{hs}px;line-height:.92;white-space:nowrap">{head}</div>'
+            if not side:
+                ph = photo_box(n, 'height:270px;flex:none')
+                if ph:
+                    main = f'<div style="display:flex;flex-direction:column;gap:22px">{ph}{main}</div>'
             sup = '<br>'.join(n.get('support', []))
-            cards.append(card(i, n, '40px 40px', 22, main, sup, 20, n.get('tag_short', n['tag'])))
+            cards.append(card(i, n, '40px 40px', 22, main, sup, 26, n.get('tag_short', n['tag']), right=side))
     k = len(cards)
     grid = (f'grid-template-rows:repeat({k},minmax(0,1fr))' if story else f'grid-template-columns:repeat({k},minmax(0,1fr))')
     inner = f'<div style="position:absolute;inset:0;display:grid;{grid};gap:28px">{"".join(cards)}</div>'
@@ -128,22 +180,27 @@ def weekly(prog, story):
 def daily(prog, n, idx, story):
     names = [n['head']] + n.get('support', [])
     rows = []
+    has_ph = head_photo(n) is not None
     for j, nm in enumerate(names):
         txt = split_b2b(nm) if len(nm) > 16 else nm
         if story:
-            size = fit(txt, 888, 120 if j == 0 else 84)
-            rows.append(f'<div style="{COND};font-size:{size}px;line-height:.98;white-space:nowrap;padding:20px 0;border-top:2px solid rgba(255,255,255,.25)">{txt}</div>')
+            size = fit(txt, 888, (110 if j == 0 else 72) if has_ph else (120 if j == 0 else 84))
+            rows.append(f'<div style="{COND};font-size:{size}px;line-height:.98;white-space:nowrap;padding:{14 if has_ph else 20}px 0;border-top:2px solid rgba(255,255,255,.25)">{txt}</div>')
         else:
-            size = fit(txt, 760, 84 if j == 0 else 72)
+            size = fit(txt, 520 if has_ph else 760, 84 if j == 0 else 72)
             rows.append(f'<div style="{COND};font-size:{size}px;line-height:.98;white-space:nowrap;padding:18px 0;border-top:2px solid rgba(255,255,255,.25)">{txt}</div>')
     genre = n.get('genre', '')
     if story:
         body = f'<div style="display:flex;flex-direction:column">{"".join(rows)}</div>'
+        if has_ph:
+            body = f'<div style="display:flex;flex-direction:column;gap:26px">{photo_box(n, "height:470px")}{body}</div>'
         top = f'<div style="display:flex;justify-content:space-between;{MONO};font-size:26px"><div style="color:{RED}">{n["tag"]}</div><div style="opacity:.8">MAIN STAGE</div></div>'
         bottom = f'<div style="{MONO};font-size:24px">{genre}</div>'
         pad = '48px'
     else:
         body = f'<div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:56px">{"".join(rows)}</div>'
+        if has_ph:
+            body = f'<div style="display:flex;gap:56px;align-items:center">{photo_box(n, "width:470px;height:470px;flex:none")}<div style="flex:1;min-width:0">{body}</div></div>'
         top = f'<div style="display:flex;justify-content:space-between;{MONO};font-size:24px"><div style="color:{RED}">{n["tag"]}</div><div style="opacity:.8">{genre}</div></div>'
         bottom = '<div></div>'
         pad = '44px 56px'
@@ -242,8 +299,11 @@ def write_plan(prog, out):
 
 
 def main():
+    global PHOTO_DIR, PROG_DIR
     prog = json.loads(Path(sys.argv[1]).read_text())
+    PROG_DIR = Path(sys.argv[1]).resolve().parent
     out = Path(sys.argv[2]).resolve()
+    PHOTO_DIR = out / '_foto'
     if '--plan' in sys.argv[3:]:
         write_plan(prog, out); print((out / 'plan.json').read_text()); return
     render(weekly(prog, True), 1080, 1920, out / 'haftalik-story')

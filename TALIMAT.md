@@ -97,6 +97,11 @@ Story takvimi (kastel_kit.py plan.json'u kendisi yazar; etkinlik yoksa o gün bo
 1. Depoyu klonla. Hafta = yarından (Pazartesi) Pazar'a. Klasör: `kastel/haftalar/<Pazartesi tarihi>_hafta`. Klasörde zaten JPG'ler + plan.json varsa işi tekrarlama, sadece raporla.
 2. Etkinlikleri bul: https://bugece.co/tr/venue/kastel → o haftaki her etkinlik sayfasının "LINE-UP" listesi, tarih, Açılış saati, Genre, sunan (ör. "BEATGATE PRESENTS"). Kastel Instagram (@kastel_istanbul) açıklamaları ve aylık takvim görseliyle karşılaştır; çelişkide Bugece LINE-UP'ı esas al, raporda belirt.
 3. `program.json` yaz (biçim `kastel_kit.py` başında). İsimler BÜYÜK HARF, Türkçe karakterler doğru; lineup'ı yazıldığı gibi kullan. A–Z (headliner'sız) gecede listedeki ilk isim `head`. b2b'ler "X B2B Y" tek öğe.
+   HEADLINER FOTOĞRAFI (kullanıcı isteği, sadece headliner için): her geceye `"photo"` ekle — headliner'ın yazısız, yüzü net basın fotoğrafı.
+   Sıra: Bugece sanatçı sayfasının og:image'ı (fetch ile HTML'den; cdn.bugece.co kabuktan indirilebilir) → RA (ra.co/dj/<ad>, og:image) → resmi site/IG.
+   Elde yalnız etkinlik afişi varsa yazısız (yüzün olduğu) bölümünü Pillow ile kırp, `kastel/haftalar/<hafta>/foto/<ad>.jpg` olarak kaydet ve
+   "photo": "foto/<ad>.jpg" yaz (yol program.json'a göre; program.json'u hafta klasörüne koy ya da mutlak yol ver). Yüz kadraja girmiyorsa
+   "photo_pos": "50% 20%" gibi ayarla. PNG'lerde yüzün kesilmediğini, üstüne yazı binmediğini kontrol et. Fotoğraf bulunamazsa alanı boş bırak (eski düzen çizilir) ve raporda yaz.
    Her geceye `"ig"` ekle: `{"head": [...], "support": [...], "org": [...], "other": [...]}` (Instagram kullanıcı adları, ETİKET STANDARDI).
    Hesapları @kastel_istanbul'un o gece için paylaştığı gönderide etiketlenenlerden al (tarayıcıda gönderiyi aç; sayfa HTML'indeki
    "usertags" ve açıklamadaki @'ler), sonra Bugece/RA ile tamamla. Mekân otomatik eklenir. kastel_kit.py sırayı ve 20 sınırını uygular.
