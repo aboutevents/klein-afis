@@ -39,6 +39,7 @@ jobs:
         continue-on-error: true
         env:
           IG_TOKEN: ${{ secrets.IG_TOKEN }}
+          SAVE: ${{ (github.event_name == 'schedule' || inputs.mode == 'publish') && '1' || '0' }}
         run: python3 scripts/collect_insights.py
       - name: Story paylaş
         env:

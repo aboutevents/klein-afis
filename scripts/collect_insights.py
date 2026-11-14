@@ -8,6 +8,7 @@ import csv, glob, json, os, datetime, urllib.request, urllib.parse, urllib.error
 
 API = "https://graph.facebook.com/v21.0"
 TOKEN = os.environ.get("IG_TOKEN", "").strip()
+SAVE = os.environ.get("SAVE", "1") == "1"  # test modunda sadece ekrana yazar
 OUT = "performans.csv"
 METRICS = ["reach", "views", "replies", "navigation", "profile_visits", "follows", "shares", "total_interactions"]
 FIELDS = ["tarih", "saat", "kaynak", "hafta", "dosya", "media_id"] + METRICS + ["etiket"]
@@ -68,6 +69,9 @@ def main():
             seen.add(mid)
     if not rows:
         print("Kaydedilecek yeni story istatistiği yok.")
+        return
+    if not SAVE:
+        print(f"TEST: {len(rows)} story okundu, performans.csv'ye KAYDEDİLMEDİ.")
         return
     new = not os.path.exists(OUT)
     with open(OUT, "a", encoding="utf-8", newline="") as f:
