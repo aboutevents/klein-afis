@@ -70,17 +70,33 @@ def post_week(week, today, gun):
 
     log_path = f"{week}/paylasim.log"
     done = open(log_path, encoding="utf-8").read() if os.path.exists(log_path) else ""
-    for f in files:
+    for entry in files:
+        # plan.json girdisi "dosya.png" ya da {"file": "dosya.png", "tags": ["kullaniciadi", ...]} olabilir
+        f = entry["file"] if isinstance(entry, dict) else entry
+        tags = [t.lstrip("@").strip() for t in (entry.get("tags", []) if isinstance(entry, dict) else []) if t.strip()]
         jpg = os.path.splitext(f)[0] + ".jpg"
         if not os.path.exists(f"{week}/{jpg}"):
             raise SystemExit(f"Görsel bulunamadı: {week}/{jpg}")
-        already = any(l.startswith(today.isoformat()) and f" {jpg} OK" in l for l in done.splitlines())
+        already = any(l.startswith(today.isoformat()) and f" {jpg} OK" in l and "(silindi)" not in l for l in done.splitlines())
         if MODE == "publish" and already:
             print("Zaten paylaşılmış, atlanıyor:", jpg)
             continue
         url = f"https://raw.githubusercontent.com/{REPO}/{SHA}/{week}/{jpg}"
-        c = call("POST", f"{IG_USER_ID}/media", {"image_url": url, "media_type": "STORIES"})
+        params = {"image_url": url, "media_type": "STORIES"}
+        if tags:
+            # Görünmeyen etiket: çıkartma olmadan kullanıcıdan bahsetme (user_tags)
+            params["user_tags"] = json.dumps([{"username": t} for t in tags])
+        try:
+            c = call("POST", f"{IG_USER_ID}/media", params)
+        except SystemExit as e:
+            if not tags:
+                raise
+            print(f"UYARI: etiketli story oluşturulamadı ({e}); etiketsiz deneniyor.")
+            params.pop("user_tags"); tags = []
+            c = call("POST", f"{IG_USER_ID}/media", params)
         cid = c["id"]
+        if tags:
+            print("Etiketlenen hesaplar:", ", ".join("@" + t for t in tags))
         for _ in range(30):
             st = call("GET", cid, {"fields": "status_code"}).get("status_code")
             if st == "FINISHED":
@@ -94,7 +110,7 @@ def post_week(week, today, gun):
         p = call("POST", f"{IG_USER_ID}/media_publish", {"creation_id": cid})
         now = (datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=3)).strftime("%H:%M")
         with open(log_path, "a", encoding="utf-8") as lf:
-            lf.write(f"{today.isoformat()} {now} {jpg} OK {p.get('id')}\n")
+            lf.write(f"{today.isoformat()} {now} {jpg} OK {p.get('id')}" + (f" etiket: {','.join(tags)}" if tags else "") + "\n")
         print("PAYLAŞILDI:", jpg, p.get("id"))
         time.sleep(10)
 

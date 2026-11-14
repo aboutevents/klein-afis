@@ -11,7 +11,7 @@ Depo: github.com/aboutevents/klein-afis (herkese açık — afişler zaten Insta
 
 Genel kurallar (kullanıcının kalıcı tercihleri):
 - Türkçe çalış. Marka adı "About Events". İçerikte alkol gösterme. Kullanıcının adını hiçbir içeriğe yazma.
-- Story'lerde kimse etiketlenmez; afişe de etiket/link eklenmez. "BU GECE" etiketi koyma.
+- Story'lerde DJ'ler ve mekân görünmeden etiketlenir (plan.json "tags"); afişin üstüne @isim/çıkartma/link konmaz (API link çıkartmasını desteklemez). "BU GECE" etiketi koyma.
 - Sanatçı fotoğrafı: Google Görseller / RA (static.ra.co/images/profiles/square/<slug>.jpg genelde 1440px temiz; indirmede tarayıcı User-Agent'ı ve Referer https://ra.co/ gerekebilir) / basın sayfaları.
   Getty/Alamy filigranlı görselleri kullanma. Beatport `image_size/590x404` görselleri ORANI BOZUK (gerilmiş) olabilir: yüzler basık/geniş görünüyorsa kullanma.
   Mekân/etkinlik afişi kırpılacaksa yazı kısmı girmesin. Çizimden sonra her afişi gözle kontrol et.
@@ -32,10 +32,17 @@ Genel kurallar (kullanıcının kalıcı tercihleri):
    - Arka planı her hafta değiştir (assets: bg_kirmizi, bg_mor, bg_altin, bg_petrol).
    - Cuma veya Cumartesi etkinliği yoksa o günün dosyalarını üretme.
 5. Çiz: `python3 kit/render.py kit haftalar/<hafta>` → her HTML için PNG + JPG. Her PNG'yi aç ve kontrol et.
-6. `plan.json` (sadece var olan dosyalar; değerler PNG adı, betik aynı adlı JPG'yi kullanır):
+6. `plan.json` (sadece var olan dosyalar; değerler PNG adı, betik aynı adlı JPG'yi kullanır). Her girdi "dosya.png" ya da etiketli olabilir:
+   `{"file": "dosya.png", "tags": ["kullaniciadi", ...]}` — etiketler görselde GÖRÜNMEZ (Instagram user_tags), hesaplar bildirim alır.
+   Hesapları Bugece sanatçı/mekân sayfalarındaki Instagram linklerinden al (Klein: phonix.klein, klein.entertainment).
+   Haftalık afişte o haftanın tüm DJ'leri + mekân, günlük afişte o gecenin DJ'leri + mekân. Hesabı doğrulanamayanı yazma.
+   Örnek (etiketli):
    ```json
-   {"pazartesi": ["haftalik_dikey.png"], "sali": ["haftalik_dikey.png", "cuma_dikey.png"], "carsamba": ["haftalik_dikey.png"],
-    "persembe": ["cumartesi_dikey.png"], "cuma": ["cuma_dikey.png"], "cumartesi": ["cumartesi_dikey.png"]}
+   {"pazartesi": [{"file": "haftalik_dikey.png", "tags": ["dj1", "dj2", "phonix.klein", "klein.entertainment"]}],
+    "sali": [{"file": "haftalik_dikey.png", "tags": ["..."]}, {"file": "cuma_dikey.png", "tags": ["..."]}],
+    "carsamba": [{"file": "haftalik_dikey.png", "tags": ["..."]}],
+    "persembe": [{"file": "cumartesi_dikey.png", "tags": ["..."]}], "cuma": [{"file": "cuma_dikey.png", "tags": ["..."]}],
+    "cumartesi": [{"file": "cumartesi_dikey.png", "tags": ["..."]}]}
    ```
 7. `git add haftalar/<hafta> && git commit -m "Klein afişleri: <hafta>" && git push` (main). Push edilmezse story'ler paylaşılamaz — hata varsa açıkça raporla.
 8. PNG'leri kullanıcıya gönder (SendUserFile) + kısa Türkçe rapor (SendUserMessage): etkinlikler, eksik bilgi/fotoğraf, haftanın story takvimi.
