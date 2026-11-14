@@ -65,7 +65,11 @@ def post_week(week, today, gun):
     if not os.path.exists(plan_path):
         print("Bu hafta için plan.json yok; paylaşılacak bir şey yok.")
         return
-    files = json.load(open(plan_path, encoding="utf-8")).get(gun, [])
+    plan = json.load(open(plan_path, encoding="utf-8"))
+    if plan.get("_panel"):
+        print("Bu hafta story'leri aboutevents.org paneli paylaşıyor (plan.json \"_panel\": true); GitHub atlıyor.")
+        return
+    files = plan.get(gun, [])
     if not files:
         print("Bugün için planlanmış story yok.")
         return

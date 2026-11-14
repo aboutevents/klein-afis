@@ -55,6 +55,7 @@ Genel kurallar (kullanıcının kalıcı tercihleri):
     "cumartesi": [{"file": "cumartesi_dikey.png", "tags": ["..."]}]}
    ```
 7. `git add haftalar/<hafta> && git commit -m "Klein afişleri: <hafta>" && git push` (main). Push edilmezse story'ler paylaşılamaz — hata varsa açıkça raporla.
+   Ardından PANEL adımları (`to_panel.py klein ...`).
 8. TAKİP ÖNERİSİ: Instagram API takip etmeyi ve takip edilenleri görmeyi desteklemez, bu yüzden otomatik takip YAPMA.
    Bu haftanın etiket listesindeki hesaplardan `takip_listesi.txt`'de OLMAYANLARI raporda "Takip edilecek yeni DJ'ler" başlığıyla
    https://instagram.com/<kullaniciadi> linkleriyle listele (yoksa "bu hafta yeni isim yok" yaz), sonra bu hesapları takip_listesi.txt'ye ekleyip commit et.
@@ -63,6 +64,16 @@ Genel kurallar (kullanıcının kalıcı tercihleri):
    Raporda GEÇEN HAFTANIN story'lerini özetle: her story için tarih, afiş, erişim, profil ziyareti, takip, yanıt; haftalık toplam/ortalama;
    en iyi ve en zayıf story; Klein ve Kastel ayrı. Önceki haftayla kıyasla (varsa). Veri yoksa nedenini söyle (ör. izin/anahtar sorunu).
 10. PNG'leri kullanıcıya gönder (SendUserFile) + kısa Türkçe rapor (SendUserMessage): etkinlikler, her story'nin etiket listesi, bulunamayan hesaplar, eksik bilgi/fotoğraf, haftanın story takvimi.
+
+## PANEL — planı aboutevents.org panelinde göster (Klein ve Kastel, her Pazar)
+Kullanıcı haftanın story planını admin > Sosyal paylaşımlar'da görüp düzenlemek istiyor. Afişler push edildikten SONRA:
+1. Web deposu: add_repo (owner aboutevents, repo web, access push) → `git clone --depth 1 https://github.com/aboutevents/web /home/claude/web`.
+2. `python3 scripts/to_panel.py <klein|kastel> <hafta klasörü> /home/claude/web` — her story için `database/data/social/<hesap>-<tarih>-<dosya>/post.json` yazar
+   (görsel bu deponun raw adresinden, etiketler, saat: Klein 11:00 IG · Kastel 13:00 IG+FB).
+   Sunucuda Meta anahtarı etkinse (ops-status "meta: … env=var") panel paylaşır: kayıtlar "Planlandı", plan.json'a `"_panel": true` yazılır ve
+   GitHub Actions o haftayı atlar (çift paylaşım olmaz). Değilse GitHub paylaşır, panel kayıtları "Durduruldu" (sadece görmek için).
+3. plan.json değiştiği için bu depoyu tekrar commit/push et; sonra web deposunda `git add database/data/social && git commit -m "<Hesap> story planı: <hafta>" && git pull --rebase --autostash && git -c push.negotiate=true push origin HEAD:main`.
+   Sunucu 5–10 dk içinde içe aktarır. Panelde düzenlenen kayıtların üzerine yazılmaz. Raporda "kim paylaşıyor: panel/GitHub" yaz.
 
 ## GÖREV B — story paylaşımı (GitHub Actions)
 Otomatik. Elle test: GitHub → Actions → "Klein story paylaşımı" → Run workflow → mode=test (yayınlamaz) veya publish, isteğe bağlı tarih.
@@ -92,6 +103,7 @@ Story takvimi (kastel_kit.py plan.json'u kendisi yazar; etkinlik yoksa o gün bo
    Sonradan sadece etiket düzeltmek için: `python3 kastel/kit/kastel_kit.py program.json kastel/haftalar/<hafta> --plan` (çizmeden plan.json yazar).
 4. Çiz: `python3 kastel/kit/kastel_kit.py program.json kastel/haftalar/<hafta>` (~6 dk; playwright + chromium, Pillow, ffmpeg). Her PNG'yi aç: isim taşması, okunurluk.
 5. `git add kastel/haftalar/<hafta> && git commit -m "Kastel afişleri: <hafta>" && git push` (main). Push olmazsa story'ler paylaşılamaz — açıkça raporla.
+   Ardından PANEL adımları (`to_panel.py kastel ...`).
 6. PNG + MP4'leri kullanıcıya gönder (SendUserFile) + kısa Türkçe rapor: program tablosu, her story'nin etiket listesi, bulunamayan hesaplar, kaynaklar, belirsizlikler, story takvimi.
 
 Elle test: Actions → "Klein story paylaşımı" → Run workflow → hesap=kastel, mode=test (yayınlamaz), isteğe bağlı tarih.
