@@ -16,6 +16,17 @@
   "fri-story.png"
  ],
  "cumartesi": [
-  "sat-story.png"
+  {
+   "file": "sat-story.png",
+   "tags": [
+    "peoplelikeus.official",
+    "batikanabiz",
+    "batikantanrikulu",
+    "yigitkarakasmusic",
+    "djgunesergun",
+    "manendria",
+    "kastel_istanbul"
+   ]
+  }
  ]
 }
