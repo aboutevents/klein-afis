@@ -43,3 +43,27 @@ Genel kurallar (kullanıcının kalıcı tercihleri):
 ## GÖREV B — story paylaşımı (GitHub Actions)
 Otomatik. Elle test: GitHub → Actions → "Klein story paylaşımı" → Run workflow → mode=test (yayınlamaz) veya publish, isteğe bağlı tarih.
 Hata olursa GitHub, depo sahibine e-posta ile bildirir. Anahtar: Settings → Secrets and variables → Actions → `IG_TOKEN`.
+
+---
+
+# KASTEL — haftalık afiş + story (aynı sistem)
+
+Kastel afişleri de bu depodan, aynı `scripts/post_story.py` ve aynı workflow ile paylaşılır.
+- `kastel/kit/` → `kastel_kit.py` (çizici) + `assets/` (logolar, mekân fotoğrafları, kırmızı arka plan videosu). Yazı tipleri depodaki `kit/fonts`'tan.
+- `kastel/haftalar/<YYYY-MM-DD>_hafta/` → o haftanın (Pazartesi tarihi) `program.json`, `plan.json`, PNG + JPG afişler, `paylasim.log`.
+  MP4'ler depoya girmez (`.gitignore`); kullanıcıya sohbetten gönderilir.
+- Paylaşım: GitHub Actions 09:50 UTC = 12:50 İstanbul (Pzt–Cmt) çalışır, story ~13:00'te düşer (Klein'ınki 10:50'de, ayrı).
+
+Story takvimi (kastel_kit.py plan.json'u kendisi yazar; etkinlik yoksa o gün boş kalır):
+- Pazartesi: haftalık · Salı: Çarşamba + Cuma etkinlikleri · Çarşamba: Çarşamba · Perşembe: Cumartesi · Cuma: Cuma · Cumartesi: Cumartesi
+- Etiket, müzik, link yok.
+
+## GÖREV K — Pazar gecesi: Kastel afişlerini hazırla
+1. Depoyu klonla. Hafta = yarından (Pazartesi) Pazar'a. Klasör: `kastel/haftalar/<Pazartesi tarihi>_hafta`. Klasörde zaten JPG'ler + plan.json varsa işi tekrarlama, sadece raporla.
+2. Etkinlikleri bul: https://bugece.co/tr/venue/kastel → o haftaki her etkinlik sayfasının "LINE-UP" listesi, tarih, Açılış saati, Genre, sunan (ör. "BEATGATE PRESENTS"). Kastel Instagram (@kastel_istanbul) açıklamaları ve aylık takvim görseliyle karşılaştır; çelişkide Bugece LINE-UP'ı esas al, raporda belirt.
+3. `program.json` yaz (biçim `kastel_kit.py` başında). İsimler BÜYÜK HARF, Türkçe karakterler doğru; lineup'ı yazıldığı gibi kullan. A–Z (headliner'sız) gecede listedeki ilk isim `head`. b2b'ler "X B2B Y" tek öğe.
+4. Çiz: `python3 kastel/kit/kastel_kit.py program.json kastel/haftalar/<hafta>` (~6 dk; playwright + chromium, Pillow, ffmpeg). Her PNG'yi aç: isim taşması, okunurluk.
+5. `git add kastel/haftalar/<hafta> && git commit -m "Kastel afişleri: <hafta>" && git push` (main). Push olmazsa story'ler paylaşılamaz — açıkça raporla.
+6. PNG + MP4'leri kullanıcıya gönder (SendUserFile) + kısa Türkçe rapor: program tablosu, kaynaklar, belirsizlikler, story takvimi.
+
+Elle test: Actions → "Klein story paylaşımı" → Run workflow → hesap=kastel, mode=test (yayınlamaz), isteğe bağlı tarih.

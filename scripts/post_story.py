@@ -9,6 +9,8 @@ Ortam değişkenleri:
   IG_USER_ID  : Instagram hesap kimliği (varsayılan abouteventsorg)
   MODE        : "publish" (paylaş) veya "test" (taslak hazırlar, YAYINLAMAZ)
   DATE        : YYYY-MM-DD (boşsa İstanbul saatine göre bugün)
+  BASE        : hafta klasörlerinin kökü: "haftalar" (Klein Phönix, varsayılan)
+                veya "kastel/haftalar" (Kastel). Virgülle birden fazla verilebilir.
 """
 import json, os, sys, time, datetime, urllib.request, urllib.parse, urllib.error
 
@@ -18,6 +20,7 @@ IG_USER_ID = os.environ.get("IG_USER_ID", "").strip() or "17841449383702414"
 MODE = (os.environ.get("MODE") or "publish").strip().lower()
 REPO = os.environ.get("GITHUB_REPOSITORY", "aboutevents/klein-afis")
 SHA = os.environ.get("GITHUB_SHA", "main")
+BASES = [b.strip().strip("/") for b in (os.environ.get("BASE") or "haftalar").split(",") if b.strip()]
 GUNLER = ["pazartesi", "sali", "carsamba", "persembe", "cuma", "cumartesi", "pazar"]
 
 
@@ -45,12 +48,17 @@ def main():
              else (datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=3)).date())
     monday = today - datetime.timedelta(days=today.weekday())
     gun = GUNLER[today.weekday()]
-    week = f"haftalar/{monday.isoformat()}_hafta"
-    print(f"Tarih {today} ({gun}) · klasör {week} · mod {MODE}")
+    print(f"Tarih {today} ({gun}) · kökler {', '.join(BASES)} · mod {MODE}")
 
     acct = call("GET", IG_USER_ID, {"fields": "username"})
     print("Instagram hesabı:", acct.get("username"))
 
+    for base in BASES:
+        post_week(f"{base}/{monday.isoformat()}_hafta", today, gun)
+
+
+def post_week(week, today, gun):
+    print(f"— klasör {week}")
     plan_path = f"{week}/plan.json"
     if not os.path.exists(plan_path):
         print("Bu hafta için plan.json yok; paylaşılacak bir şey yok.")
