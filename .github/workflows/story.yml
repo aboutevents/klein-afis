@@ -1,0 +1,46 @@
+name: Klein story paylaşımı
+
+on:
+  schedule:
+    # 07:50 UTC = 10:50 İstanbul (Pzt–Cmt). GitHub zamanlayıcısı birkaç dakika gecikebilir; story ~11:00'de düşer.
+    - cron: "50 7 * * 1-6"
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "test = taslak hazırlar, YAYINLAMAZ · publish = paylaşır"
+        default: "test"
+        type: choice
+        options: [test, publish]
+      date:
+        description: "Tarih (YYYY-MM-DD). Boş bırakılırsa bugün."
+        default: ""
+        required: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: klein-story
+  cancel-in-progress: false
+
+jobs:
+  story:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Story paylaş
+        env:
+          IG_TOKEN: ${{ secrets.IG_TOKEN }}
+          MODE: ${{ github.event_name == 'schedule' && 'publish' || inputs.mode }}
+          DATE: ${{ inputs.date }}
+        run: python3 scripts/post_story.py
+      - name: Paylaşım kaydını kaydet
+        if: always()
+        run: |
+          if [ -n "$(git status --porcelain haftalar)" ]; then
+            git config user.name "klein-story-bot"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add haftalar
+            git commit -m "Story paylaşım kaydı $(date -u +%F)"
+            git push
+          fi

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<title>13–14 Kasım · Bu hafta</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&amp;family=IBM+Plex+Mono:wght@400;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#FFFFFF}a:hover{color:#DDDDDD}
+</style>
+</helmet>
+<div style="position: relative; width: 1080px; height: 1920px; overflow: hidden; background: #111111; color: #FFFFFF; font-family: 'Archivo', sans-serif">
+<img src="assets/bg_kirmizi.jpg" alt="" aria-hidden="true" style="position: absolute; inset: 0; width: 1080px; height: 1920px; object-fit: cover">
+
+<div style="position: absolute; inset: 0; background: rgba(0,0,0,{{dim}})"></div>
+<div style="position: absolute; left: 0; right: 0; top: 0; height: 700px; background: linear-gradient(to bottom, rgba(0,0,0,0.8), rgba(0,0,0,0))"></div>
+<div style="position: absolute; left: 0; right: 0; bottom: 0; height: 500px; background: linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,0.85))"></div>
+
+<img src="assets/aboutevents.png" alt="About Events" style="position: absolute; top: 120px; left: 80px; height: 64px; width: auto">
+<img src="assets/klein.png" alt="Klein Phönix" style="position: absolute; top: 90px; right: 80px; width: 130px; height: auto">
+
+<div style="position: absolute; left: 80px; right: 260px; top: 400px; display: flex; flex-direction: column; gap: 22px; text-shadow: 0 2px 14px rgba(0,0,0,0.7)">
+<div style="font-family: 'IBM Plex Mono', monospace; font-size: 28px; font-weight: 600">13–14 KASIM · CUMA &amp; CUMARTESİ</div>
+<div style="font-weight: 900; font-stretch: 62%; font-size: 110px; line-height: 0.9; letter-spacing: -1px">BU HAFTA<br><span style="color: {{accent}}">KLEIN PHÖNIX&#39;TE.</span></div>
+</div>
+
+<div style="position: absolute; left: 80px; right: 80px; top: 690px; display: flex; flex-direction: column; gap: 30px">
+<div style="display: flex; flex-direction: column; gap: 20px">
+<div style="position: relative; height: 540px; overflow: hidden; background: #111111">
+<img src="foto/fideles.jpg" alt="Fideles" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%">
+<div style="position: absolute; left: 0; right: 0; bottom: 0; height: 100%; background: linear-gradient(to bottom, rgba(0,0,0,0) 30%, rgba(0,0,0,0.85) 100%)"></div>
+<div style="position: absolute; left: 32px; right: 32px; bottom: 36px; display: flex; flex-direction: column; gap: 16px; text-shadow: 0 2px 12px rgba(0,0,0,0.8)">
+<div style="font-family: 'IBM Plex Mono', monospace; font-size: 24px; font-weight: 600; color: {{accent}}">13 KASIM CUMA</div>
+<div style="font-weight: 900; font-stretch: 62%; font-size: 84px; line-height: 0.9">FIDELES</div>
+<div style="font-family: 'IBM Plex Mono', monospace; font-size: 22px; font-weight: 600; line-height: 1.5">CCINNI · BARIŞ BERBER</div>
+</div>
+</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 20px">
+<div style="position: relative; height: 540px; overflow: hidden; background: #111111">
+<img src="foto/betical_ra.jpg" alt="Betical" style="filter: brightness(0.82); position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 12%">
+<div style="position: absolute; left: 0; right: 0; bottom: 0; height: 100%; background: linear-gradient(to bottom, rgba(0,0,0,0.05) 10%, rgba(0,0,0,0.55) 50%, rgba(0,0,0,0.92) 100%)"></div>
+<div style="position: absolute; left: 32px; right: 32px; bottom: 36px; display: flex; flex-direction: column; gap: 16px; text-shadow: 0 2px 12px rgba(0,0,0,0.8)">
+<div style="font-family: 'IBM Plex Mono', monospace; font-size: 24px; font-weight: 600; color: {{accent}}">14 KASIM CUMARTESİ</div>
+<div style="font-weight: 900; font-stretch: 62%; font-size: 84px; line-height: 0.9">BETICAL</div>
+<div style="font-family: 'IBM Plex Mono', monospace; font-size: 22px; font-weight: 600; line-height: 1.5">DORUK · HARASØ</div>
+</div>
+</div>
+</div>
+</div>
+
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#F1780E","options":["#F1780E","#FFFFFF","#111111"]},"dim":{"editor":"range","default":0.2,"min":0,"max":0.7,"step":0.05},"$preview":{"width":1080,"height":1920}}'>
+class Component extends DCLogic {
+renderVals() {
+return { accent: this.props.accent ?? '#F1780E', dim: this.props.dim ?? 0.2 };
+}
+}
+</script>
+</body>
+</html>

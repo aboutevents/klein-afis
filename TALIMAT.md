@@ -1,0 +1,45 @@
+# Klein Phönix haftalık afiş + story otomasyonu (About Events)
+
+Depo: github.com/aboutevents/klein-afis (herkese açık — afişler zaten Instagram'da yayınlanıyor).
+- `kit/` → şablonlar, yazı tipleri, logolar, arka planlar, `render.py`
+- `haftalar/<YYYY-MM-DD>_hafta/` → o haftanın (Pazartesi tarihi) HTML'leri, `foto/`, PNG + JPG afişler, `plan.json`, `paylasim.log`
+- `scripts/post_story.py` + `.github/workflows/story.yml` → story paylaşımı (GitHub Actions, Pzt–Cmt ~11:00)
+
+İş bölümü:
+- **Pazar gecesi (Claude zamanlanmış görevi, bulutta):** GÖREV A — afişleri hazırla, bu depoya gönder.
+- **Her gün ~11:00 (GitHub Actions):** plan.json'a göre story'yi Instagram API ile paylaşır. Claude'un bir şey yapmasına gerek yok.
+
+Genel kurallar (kullanıcının kalıcı tercihleri):
+- Türkçe çalış. Marka adı "About Events". İçerikte alkol gösterme. Kullanıcının adını hiçbir içeriğe yazma.
+- Story'lerde kimse etiketlenmez; afişe de etiket/link eklenmez. "BU GECE" etiketi koyma.
+- Sanatçı fotoğrafı: Google Görseller / RA (static.ra.co/images/profiles/square/<slug>.jpg genelde 1440px temiz; indirmede tarayıcı User-Agent'ı ve Referer https://ra.co/ gerekebilir) / basın sayfaları.
+  Getty/Alamy filigranlı görselleri kullanma. Beatport `image_size/590x404` görselleri ORANI BOZUK (gerilmiş) olabilir: yüzler basık/geniş görünüyorsa kullanma.
+  Mekân/etkinlik afişi kırpılacaksa yazı kısmı girmesin. Çizimden sonra her afişi gözle kontrol et.
+
+## GÖREV A — Pazar gecesi: haftanın afişlerini hazırla
+
+1. Depoyu klonla. Hafta = yarından (Pazartesi) Pazar'a. Klasör: `haftalar/<Pazartesi tarihi>_hafta` (ör. `haftalar/2026-11-16_hafta`).
+   Klasörde zaten JPG'ler + plan.json varsa işi tekrarlama, sadece raporla.
+2. Etkinlikleri bul: https://bugece.co/tr/venue/klein-phonix (curl/tarayıcı ile erişilebilir). O haftaki her etkinlik sayfasından:
+   ad, tarih, kapı saati (Açılış), lineup (headliner + support'lar), kısa açıklama. Set saati genelde yok → afişe sadece "KAPI hh:mm".
+3. Sanatçı fotoğraflarını indir → `<hafta>/foto/`.
+4. Şablonlardan HTML üret (`kit/templates`, aynı klasöre):
+   - `haftalik_dikey.html` / `haftalik_yatay.html` — "BU HAFTA KLEIN PHÖNIX'TE.", her etkinlik için bir kart (tarih "13 KASIM CUMA", isim, alt satır support'lar).
+     Şablonda 2 kart var; 1/3/4 etkinlikte kart sayısını/ızgarayı uyarla (yatayda yan yana; dikeyde 3–4 etkinlikte 2×2). Üstteki tarih aralığını güncelle.
+   - Cuma etkinliği: `cuma_dikey.html` / `cuma_yatay.html`; Cumartesi: `cumartesi_dikey.html` / `cumartesi_yatay.html`
+     (kaynak `gunluk_dikey.html` / `gunluk_yatay.html`). Başlık = headliner, kısa slogan (sound'a atıf, 4–7 kelime, BÜYÜK HARF),
+     tarih + "KAPI 22:00", kartlar HEADLINER + SUPPORT (b2b ise "B2B"). Fotoğrafı olmayan support'u alt satıra yaz.
+   - Arka planı her hafta değiştir (assets: bg_kirmizi, bg_mor, bg_altin, bg_petrol).
+   - Cuma veya Cumartesi etkinliği yoksa o günün dosyalarını üretme.
+5. Çiz: `python3 kit/render.py kit haftalar/<hafta>` → her HTML için PNG + JPG. Her PNG'yi aç ve kontrol et.
+6. `plan.json` (sadece var olan dosyalar; değerler PNG adı, betik aynı adlı JPG'yi kullanır):
+   ```json
+   {"pazartesi": ["haftalik_dikey.png"], "sali": ["haftalik_dikey.png", "cuma_dikey.png"], "carsamba": ["haftalik_dikey.png"],
+    "persembe": ["cumartesi_dikey.png"], "cuma": ["cuma_dikey.png"], "cumartesi": ["cumartesi_dikey.png"]}
+   ```
+7. `git add haftalar/<hafta> && git commit -m "Klein afişleri: <hafta>" && git push` (main). Push edilmezse story'ler paylaşılamaz — hata varsa açıkça raporla.
+8. PNG'leri kullanıcıya gönder (SendUserFile) + kısa Türkçe rapor (SendUserMessage): etkinlikler, eksik bilgi/fotoğraf, haftanın story takvimi.
+
+## GÖREV B — story paylaşımı (GitHub Actions)
+Otomatik. Elle test: GitHub → Actions → "Klein story paylaşımı" → Run workflow → mode=test (yayınlamaz) veya publish, isteğe bağlı tarih.
+Hata olursa GitHub, depo sahibine e-posta ile bildirir. Anahtar: Settings → Secrets and variables → Actions → `IG_TOKEN`.
