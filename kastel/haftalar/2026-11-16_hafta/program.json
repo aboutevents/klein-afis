@@ -1,0 +1,12 @@
+{
+ "week_dates": "20–21 KASIM",
+ "week_days": "CUMA & CUMARTESİ",
+ "nights": [
+  {"key": "fri", "date": "20 KASIM CUMA", "tag": "TECH HOUSE", "tag_short": "TECH HOUSE",
+   "head": "ADANA TWINS", "support": ["ALAN CUTT", "AYÇA YILDIZAY"], "doors": "22:00", "genre": "TECH HOUSE",
+   "photo": "foto/adanatwins.jpg", "photo_pos": "50% 25%"},
+  {"key": "sat", "date": "21 KASIM CUMARTESİ", "tag": "HOUSE · MINIMAL", "tag_short": "HOUSE · MINIMAL",
+   "head": "ALICAN", "support": ["ALI EFE DİNÇ", "MANTHEM", "MANENDRIA"], "doors": "21:00", "genre": "HOUSE · MINIMAL",
+   "photo": "foto/alican.jpg", "photo_pos": "50% 25%"}
+ ]
+}

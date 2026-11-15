@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<title>20–21 Kasım · Bu hafta</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&amp;family=IBM+Plex+Mono:wght@400;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#FFFFFF}a:hover{color:#DDDDDD}
+</style>
+</helmet>
+<div style="position: relative; width: 1920px; height: 1080px; overflow: hidden; background: #111111; color: #FFFFFF; font-family: 'Archivo', sans-serif">
+<img src="assets/bg_petrol.jpg" alt="" aria-hidden="true" style="position: absolute; inset: 0; width: 1920px; height: 1080px; object-fit: cover; object-position: 50% 30%">
+
+<div style="position: absolute; inset: 0; background: rgba(0,0,0,{{dim}})"></div>
+<div style="position: absolute; left: 0; right: 0; bottom: 0; height: 640px; background: linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,0.85) 45%, rgba(0,0,0,0.95))"></div>
+<div style="position: absolute; left: 0; right: 0; top: 0; height: 440px; background: linear-gradient(to bottom, rgba(0,0,0,0.8), rgba(0,0,0,0))"></div>
+
+<img src="assets/aboutevents.png" alt="About Events" style="position: absolute; top: 80px; left: 100px; height: 56px; width: auto">
+
+<div style="position: absolute; left: 100px; right: 100px; top: 110px; display: flex; justify-content: space-between; align-items: flex-end; gap: 40px; text-shadow: 0 2px 14px rgba(0,0,0,0.7)">
+<div style="font-weight: 900; font-stretch: 62%; font-size: 80px; line-height: 0.92; letter-spacing: -1px">BU HAFTA<br><span style="color: {{accent}}">KLEIN PHÖNIX&#39;TE.</span></div>
+<div style="display: flex; align-items: flex-end; gap: 40px">
+<div style="display: flex; flex-direction: column; align-items: flex-end; gap: 14px; font-family: 'IBM Plex Mono', monospace; font-weight: 600; font-size: 28px; padding-bottom: 6px">
+<div>20–21 KASIM</div>
+<div>CUMA &amp; CUMARTESİ</div>
+</div>
+<img src="assets/klein.png" alt="Klein Phönix" style="width: 130px; height: auto; display: block">
+</div>
+</div>
+
+<div style="position: absolute; left: 100px; right: 100px; top: 390px; bottom: 80px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px">
+<div style="position: relative; overflow: hidden; background: #171815">
+<img src="foto/adambeyer.jpg" alt="Adam Beyer" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 25%">
+<div style="position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0) 40%, rgba(0,0,0,0.9) 100%)"></div>
+<div style="position: absolute; left: 36px; right: 36px; bottom: 34px; display: flex; flex-direction: column; gap: 12px; text-shadow: 0 2px 12px rgba(0,0,0,0.8)">
+<div style="font-family: 'IBM Plex Mono', monospace; font-size: 28px; font-weight: 600; color: {{accent}}">20 KASIM CUMA</div>
+<div style="font-weight: 900; font-stretch: 62%; font-size: 84px; line-height: 0.9">ADAM BEYER</div>
+<div style="font-family: 'IBM Plex Mono', monospace; font-size: 22px; font-weight: 600">FRED LENIX · ZAFER ATABEY · SERDAR AVAR</div>
+</div>
+</div>
+<div style="position: relative; overflow: hidden; background: #171815">
+<img src="foto/genesi.jpg" alt="GENESI" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 65% 30%">
+<div style="position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0) 40%, rgba(0,0,0,0.9) 100%)"></div>
+<div style="position: absolute; left: 36px; right: 36px; bottom: 34px; display: flex; flex-direction: column; gap: 12px; text-shadow: 0 2px 12px rgba(0,0,0,0.8)">
+<div style="font-family: 'IBM Plex Mono', monospace; font-size: 28px; font-weight: 600; color: {{accent}}">21 KASIM CUMARTESİ</div>
+<div style="font-weight: 900; font-stretch: 62%; font-size: 84px; line-height: 0.9">GENESI</div>
+<div style="font-family: 'IBM Plex Mono', monospace; font-size: 22px; font-weight: 600">KORAY T · S.A.B.R.I · RIKAYA · GALAL</div>
+</div>
+</div>
+</div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#F1780E","options":["#F1780E","#FFFFFF","#111111"]},"dim":{"editor":"range","default":0.3,"min":0,"max":0.7,"step":0.05},"$preview":{"width":1920,"height":1080}}'>
+class Component extends DCLogic {
+renderVals() {
+return { accent: this.props.accent ?? '#F1780E', dim: this.props.dim ?? 0.3 };
+}
+}
+</script>
+</body>
+</html>
