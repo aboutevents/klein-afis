@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<title>Henri Bergmann · Story</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&amp;family=IBM+Plex+Mono:wght@400;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#FFFFFF}a:hover{color:#DDDDDD}
+</style>
+</helmet>
+<div style="position: relative; width: 1080px; height: 1920px; overflow: hidden; background: #111111; color: #FFFFFF; font-family: 'Archivo', sans-serif">
+<img src="assets/bg_mor.jpg" alt="" aria-hidden="true" style="position: absolute; inset: 0; width: 1080px; height: 1920px; object-fit: cover">
+<div style="position: absolute; inset: 0; background: rgba(0,0,0,{{dim}})"></div>
+<div style="position: absolute; left: 0; right: 0; top: 0; height: 640px; background: linear-gradient(to bottom, rgba(0,0,0,0.8), rgba(0,0,0,0))"></div>
+<img src="assets/aboutevents.png" alt="About Events" style="position: absolute; top: 120px; left: 80px; height: 64px; width: auto">
+<img src="assets/klein.png" alt="Klein Phönix" style="position: absolute; top: 90px; right: 80px; width: 130px; height: auto">
+<div style="position: absolute; left: 80px; right: 80px; top: 340px; display: flex; flex-direction: column; gap: 20px; text-shadow: 0 2px 14px rgba(0,0,0,0.7)">
+<div style="font-family: 'IBM Plex Mono', monospace; font-weight: 600; font-size: 28px">27 KASIM CUMA · KAPI 21:00</div>
+<div style="font-weight: 900; font-stretch: 62%; font-size: 92px; line-height: 0.9; letter-spacing: -1px">BU CUMA<br><span style="color: {{accent}}">KLEIN PHÖNIX&#39;TE.</span></div>
+</div>
+<div style="position: absolute; left: 80px; right: 80px; top: 640px; height: 760px; overflow: hidden; background: #111">
+<img src="foto/linska.jpg" alt="LINSKA" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 45% 20%">
+<div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.15) 40%, rgba(0,0,0,0) 100%)"></div>
+<div style="position: absolute; left: 40px; right: 40px; bottom: 36px; display: flex; flex-direction: column; gap: 12px; text-shadow: 0 2px 12px rgba(0,0,0,0.8)">
+<div style="font-family: 'IBM Plex Mono', monospace; font-weight: 600; font-size: 28px; color: {{accent}}">HEADLINER</div>
+<div style="font-weight: 900; font-stretch: 62%; font-size: 150px; line-height: 0.85; letter-spacing: -2px">LINSKA</div>
+<div style="font-weight: 900; font-stretch: 62%; font-size: 38px; line-height: 1">TECH HOUSE&#39;UN EN TAZE ENERJİSİ.</div>
+</div></div>
+<div style="position: absolute; left: 80px; right: 80px; top: 1440px; display: flex; flex-direction: column">
+<div style="font-family: 'IBM Plex Mono', monospace; font-weight: 600; font-size: 26px; color: {{accent}}; padding-bottom: 14px">SUPPORT</div><div style="font-weight: 900; font-stretch: 62%; font-size: 70px; line-height: 1; padding: 18px 0; border-top: 2px solid rgba(255,255,255,0.22)">ADAM IN DEEP</div><div style="font-weight: 900; font-stretch: 62%; font-size: 70px; line-height: 1; padding: 18px 0; border-top: 2px solid rgba(255,255,255,0.22)">BEYZA</div></div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#F1780E","options":["#F1780E","#FFFFFF","#111111"]},"dim":{"editor":"range","default":0.35,"min":0,"max":0.7,"step":0.05},"$preview":{"width":1080,"height":1920}}'>
+class Component extends DCLogic {
+renderVals() {
+return { accent: this.props.accent ?? '#F1780E', dim: this.props.dim ?? 0.35 };
+}
+}
+</script>
+</body>
+</html>

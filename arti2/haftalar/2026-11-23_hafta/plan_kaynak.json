@@ -1,0 +1,26 @@
+{
+ "weekly": {
+  "file": "haftalik_dikey.png",
+  "tags": [
+   "gwendelienmusic",
+   "djozgurbay",
+   "arti2istanbul"
+  ]
+ },
+ "events": {
+  "cuma": {
+   "file": "cuma_dikey.png",
+   "tags": [
+    "gwendelienmusic",
+    "arti2istanbul"
+   ]
+  },
+  "cumartesi": {
+   "file": "cumartesi_dikey.png",
+   "tags": [
+    "djozgurbay",
+    "arti2istanbul"
+   ]
+  }
+ }
+}

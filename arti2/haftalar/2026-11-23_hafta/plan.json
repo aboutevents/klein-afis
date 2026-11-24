@@ -1,0 +1,40 @@
+{
+ "carsamba": [
+  {
+   "file": "haftalik_dikey.png",
+   "tags": [
+    "gwendelienmusic",
+    "djozgurbay",
+    "arti2istanbul"
+   ]
+  }
+ ],
+ "persembe": [
+  {
+   "file": "haftalik_dikey.png",
+   "tags": [
+    "gwendelienmusic",
+    "djozgurbay",
+    "arti2istanbul"
+   ]
+  }
+ ],
+ "cuma": [
+  {
+   "file": "cuma_dikey.png",
+   "tags": [
+    "gwendelienmusic",
+    "arti2istanbul"
+   ]
+  }
+ ],
+ "cumartesi": [
+  {
+   "file": "cumartesi_dikey.png",
+   "tags": [
+    "djozgurbay",
+    "arti2istanbul"
+   ]
+  }
+ ]
+}

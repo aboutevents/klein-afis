@@ -6,12 +6,37 @@ Depo: github.com/aboutevents/klein-afis (herkese açık — afişler zaten Insta
 - `scripts/post_story.py` + `.github/workflows/story.yml` → story paylaşımı (GitHub Actions, Pzt–Cmt ~11:00)
 
 İş bölümü:
-- **Pazar gecesi (Claude zamanlanmış görevi, bulutta):** GÖREV A — afişleri hazırla, bu depoya gönder.
+- **Pazartesi sabahı (Claude zamanlanmış görevi, bulutta):** GÖREV A + K + Izaka + ARTI2 — afişleri hazırla, takvimi kur, bu depoya gönder.
 - **Her gün ~11:00 (GitHub Actions):** plan.json'a göre story'yi Instagram API ile paylaşır. Claude'un bir şey yapmasına gerek yok.
 
 Genel kurallar (kullanıcının kalıcı tercihleri):
 - Türkçe çalış. Marka adı "About Events". İçerikte alkol gösterme. Kullanıcının adını hiçbir içeriğe yazma.
 - Story'lerde DJ'ler ve mekân görünmeden etiketlenir (plan.json "tags"); afişin üstüne @isim/çıkartma/link konmaz (API link çıkartmasını desteklemez). "BU GECE" etiketi koyma.
+
+## ⚠️ GÜNCEL KURAL (24 Kasım 2026) — aşağıdaki eski takvimlerin YERİNE GEÇER
+Kapsam: **Klein Phönix, Kastel, Izaka, ARTI2** — hepsi About Events Instagram hesabından story.
+Hazırlık günü: **her Pazartesi sabahı** (zamanlanmış görev ~06:40 İstanbul). O haftanın (Pazartesi–Pazar) afişlerini hazırla,
+`plan_kaynak.json` yaz, `python3 scripts/plan_week.py <hafta_klasörü>` ile plan.json üret, push et. İlk story aynı gün paylaşılır.
+Story takvimi kuralı (scripts/plan_week.py uygular):
+- DJ'ye özel (o gecenin) afişi YALNIZ etkinlik günü paylaşılır.
+- Haftalık program afişi etkinlik OLMAYAN günlere yayılır (Pazartesi'den haftanın son etkinliğine kadar). Son etkinlikten sonra ve Pazar paylaşım yok.
+- Saatler (GitHub Actions): Klein ~11:00 · Kastel ~13:00 · Izaka ~15:00 · ARTI2 ~17:00.
+- Kastel: kastel_kit.py kendi plan.json'unu yazar — çizimden SONRA plan_kaynak.json (weekly = haftalik-story.png, events = wed/fri/sat-story.png)
+  yazıp plan_week.py'yi çalıştır (kit'in takvimini ezer).
+
+### IZAKA (Izaka Terrace Bar, CVK Park Bosphorus) — `izaka/haftalar/<Pazartesi>_hafta/`
+- Kaynak: aboutevents/web deposu `database/data/izaka/program.json` + mekânın kendi afişleri (story-*.jpg, poster-*.jpg).
+  Klonla: `git clone --depth 1 https://github.com/aboutevents/web /home/claude/web` (add_repo aboutevents/web read).
+- Etkinlik günü afişi = mekânın story afişi → `cuma_dikey.jpg` / `cumartesi_dikey.jpg` (gün adına göre). Tarihi kontrol et (mekân afişinde tarih yanlış olabiliyor: 21 Kasım Ezgi afişinde "27 November" yazıyordu) — yanlışsa raporla.
+- Yatay: `python3 venues_kit/izaka_yatay.py <story.jpg> <çıktı_adı> "(222,405,862,568)"` (başlık kutusu: Rhythm of the Bosphorus; Oldies But Goldies için "(365,375,770,568)").
+- Haftalık: `venues_kit/izaka.json`'u güncelle (tarihler, geceler, kart fotoğrafı = story'den (300,650,785,1030) kırpımı) → `python3 venues_kit/weekly.py venues_kit/izaka.json <hafta_klasörü>`.
+- Etiket: DJ'lerin hesapları (ör. Gwen De Lien = gwendelienmusic, Özgür Bay = djozgurbay). Izaka'nın Instagram hesabı DOĞRULANMADI — doğrulanana kadar etiketleme.
+
+### ARTI2 (+2, Şişli, Büyükdere Cd. 33) — `arti2/haftalar/<Pazartesi>_hafta/`
+- Kaynak: aboutevents/web `database/data/arti2/program.json` + story-<gün>.jpg / poster-<gün>.jpg. Cuma–Cumartesi 19:30–01:30, kalabalık kadro.
+- Etkinlik günü afişi = mekânın story afişi → `cuma_dikey.jpg` / `cumartesi_dikey.jpg`.
+- Haftalık: `venues_kit/arti2.json` (logo `assets/arti2_white.png` — kullanıcının gönderdiği +2 logosu; arka plan `assets/arti2_bg.jpg`; kart görselleri mekân afişinin yazısız panellerinden) → `python3 venues_kit/weekly.py venues_kit/arti2.json <hafta_klasörü>`.
+- Etiket: mekân `arti2istanbul` + doğrulanan DJ hesapları (headliner önce).
 
 ## ETİKET STANDARDI (kullanıcının kalıcı kuralı — Klein, Kastel ve tüm hesaplar için)
 - Her story'de o afişte sahne alan TÜM DJ'ler + mekân + (varsa) etkinlik organizatörü / sunan ("X PRESENTS") etiketlenir.
@@ -28,7 +53,7 @@ Genel kurallar (kullanıcının kalıcı tercihleri):
 
 ## GÖREV A — Pazar gecesi: haftanın afişlerini hazırla
 
-1. Depoyu klonla. Hafta = yarından (Pazartesi) Pazar'a. Klasör: `haftalar/<Pazartesi tarihi>_hafta` (ör. `haftalar/2026-11-16_hafta`).
+1. Depoyu klonla. Hafta = BUGÜNDEN (Pazartesi) Pazar'a (görev Pazartesi sabahı çalışır). Klasör: `haftalar/<Pazartesi tarihi>_hafta` (ör. `haftalar/2026-11-16_hafta`).
    Klasörde zaten JPG'ler + plan.json varsa işi tekrarlama, sadece raporla.
 2. Etkinlikleri bul: https://bugece.co/tr/venue/klein-phonix (curl/tarayıcı ile erişilebilir). O haftaki her etkinlik sayfasından:
    ad, tarih, kapı saati (Açılış), lineup (headliner + support'lar), kısa açıklama. Set saati genelde yok → afişe sadece "KAPI hh:mm".
@@ -94,7 +119,7 @@ Story takvimi (kastel_kit.py plan.json'u kendisi yazar; etkinlik yoksa o gün bo
 - DJ'ler + @kastel_istanbul + (varsa) organizatör görünmeden etiketlenir (ETİKET STANDARDI). Müzik, link yok.
 
 ## GÖREV K — Pazar gecesi: Kastel afişlerini hazırla
-1. Depoyu klonla. Hafta = yarından (Pazartesi) Pazar'a. Klasör: `kastel/haftalar/<Pazartesi tarihi>_hafta`. Klasörde zaten JPG'ler + plan.json varsa işi tekrarlama, sadece raporla.
+1. Depoyu klonla. Hafta = BUGÜNDEN (Pazartesi) Pazar'a (görev Pazartesi sabahı çalışır). Klasör: `kastel/haftalar/<Pazartesi tarihi>_hafta`. Klasörde zaten JPG'ler + plan.json varsa işi tekrarlama, sadece raporla.
 2. Etkinlikleri bul: https://bugece.co/tr/venue/kastel → o haftaki her etkinlik sayfasının "LINE-UP" listesi, tarih, Açılış saati, Genre, sunan (ör. "BEATGATE PRESENTS"). Kastel Instagram (@kastel_istanbul) açıklamaları ve aylık takvim görseliyle karşılaştır; çelişkide Bugece LINE-UP'ı esas al, raporda belirt.
 3. `program.json` yaz (biçim `kastel_kit.py` başında). İsimler BÜYÜK HARF, Türkçe karakterler doğru; lineup'ı yazıldığı gibi kullan. A–Z (headliner'sız) gecede listedeki ilk isim `head`. b2b'ler "X B2B Y" tek öğe.
    HEADLINER FOTOĞRAFI (kullanıcı isteği, sadece headliner için): her geceye `"photo"` ekle — headliner'ın yazısız, yüzü net basın fotoğrafı.

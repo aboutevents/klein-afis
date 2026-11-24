@@ -1,0 +1,86 @@
+{
+ "week_dates": "25–28 KASIM",
+ "week_days": "ÇARŞAMBA, CUMA & CUMARTESİ",
+ "nights": [
+  {
+   "key": "wed",
+   "date": "25 KASIM ÇARŞAMBA",
+   "tag": "RICH K. X KASTEL",
+   "tag_short": "RICH K.",
+   "head": "QUETO + DJ U.F.U.K.",
+   "support": [
+    "CAN GENÇ · EFEX",
+    "FEYZAN TUFAN · CAN TEMİZ",
+    "ECEM KIRMIZISAÇ · SHAFIRA YANA YASMIN"
+   ],
+   "doors": "21:00",
+   "genre": "TECHNO",
+   "photo": "foto/queto.jpg",
+   "photo_pos": "50% 20%",
+   "ig": {
+    "head": [
+     "djqueto",
+     "dj.u.f.u.k"
+    ],
+    "support": [
+     "ecemkirmizisac"
+    ],
+    "org": [],
+    "other": []
+   }
+  },
+  {
+   "key": "fri",
+   "date": "27 KASIM CUMA",
+   "tag": "KASTEL",
+   "tag_short": "KASTEL",
+   "head": "VOLKAN GÜNDÜZ",
+   "support": [
+    "FAITH",
+    "MANENDRIA",
+    "BODERIN",
+    "FATE"
+   ],
+   "doors": "21:00",
+   "genre": "ELEKTRONİK",
+   "photo": "foto/volkangunduz.jpg",
+   "photo_pos": "62% 25%",
+   "ig": {
+    "head": [
+     "volkangndz"
+    ],
+    "support": [
+     "itsboderin"
+    ],
+    "org": [],
+    "other": []
+   }
+  },
+  {
+   "key": "sat",
+   "date": "28 KASIM CUMARTESİ",
+   "tag": "MODUNDAYIZ SUNAR · 20 YEARS OF BEATGATE",
+   "tag_short": "20 YEARS OF BEATGATE",
+   "head": "DIXON",
+   "support": [
+    "VOLKAN GÜNDÜZ",
+    "MANENDRIA",
+    "FIRAT ORAL"
+   ],
+   "doors": "21:00",
+   "genre": "HOUSE · TECHNO",
+   "photo": "foto/dixon.jpg",
+   "photo_pos": "50% 25%",
+   "ig": {
+    "head": [
+     "dixon_"
+    ],
+    "support": [
+     "volkangndz"
+    ],
+    "org": [],
+    "other": []
+   }
+  }
+ ]
+}

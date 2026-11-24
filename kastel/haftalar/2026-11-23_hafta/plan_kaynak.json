@@ -1,0 +1,41 @@
+{
+ "weekly": {
+  "file": "haftalik-story.png",
+  "tags": [
+   "djqueto",
+   "dj.u.f.u.k",
+   "volkangndz",
+   "dixon_",
+   "kastel_istanbul",
+   "ecemkirmizisac",
+   "itsboderin"
+  ]
+ },
+ "events": {
+  "carsamba": {
+   "file": "wed-story.png",
+   "tags": [
+    "djqueto",
+    "dj.u.f.u.k",
+    "kastel_istanbul",
+    "ecemkirmizisac"
+   ]
+  },
+  "cuma": {
+   "file": "fri-story.png",
+   "tags": [
+    "volkangndz",
+    "kastel_istanbul",
+    "itsboderin"
+   ]
+  },
+  "cumartesi": {
+   "file": "sat-story.png",
+   "tags": [
+    "dixon_",
+    "kastel_istanbul",
+    "volkangndz"
+   ]
+  }
+ }
+}

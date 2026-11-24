@@ -1,0 +1,35 @@
+{
+ "weekly": {
+  "file": "haftalik_dikey.png",
+  "tags": [
+   "moblackrecords",
+   "phonix.klein",
+   "klein.entertainment",
+   "adamindeepmusic",
+   "b3yzamusic",
+   "batu.ofc",
+   "erenyildiz_official"
+  ]
+ },
+ "events": {
+  "cuma": {
+   "file": "cuma_dikey.png",
+   "tags": [
+    "phonix.klein",
+    "klein.entertainment",
+    "adamindeepmusic",
+    "b3yzamusic"
+   ]
+  },
+  "cumartesi": {
+   "file": "cumartesi_dikey.png",
+   "tags": [
+    "moblackrecords",
+    "phonix.klein",
+    "klein.entertainment",
+    "batu.ofc",
+    "erenyildiz_official"
+   ]
+  }
+ }
+}

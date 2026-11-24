@@ -40,8 +40,8 @@ def main():
             seen = {row["media_id"] for row in csv.DictReader(f)}
     now = datetime.datetime.now(TR)
     rows = []
-    for log in sorted(glob.glob("haftalar/*/paylasim.log") + glob.glob("kastel/haftalar/*/paylasim.log")):
-        kaynak = "kastel" if log.startswith("kastel/") else "klein"
+    for log in sorted(glob.glob("haftalar/*/paylasim.log") + glob.glob("kastel/haftalar/*/paylasim.log") + glob.glob("izaka/haftalar/*/paylasim.log") + glob.glob("arti2/haftalar/*/paylasim.log")):
+        kaynak = log.split("/")[0] if "/haftalar/" in log else "klein"
         hafta = log.split("/")[-2]
         for line in open(log, encoding="utf-8"):
             p = line.split()

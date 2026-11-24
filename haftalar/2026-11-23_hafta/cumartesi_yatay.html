@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<title>Henri Bergmann · Yatay</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&amp;family=IBM+Plex+Mono:wght@400;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#FFFFFF}a:hover{color:#DDDDDD}
+</style>
+</helmet>
+<div style="position: relative; width: 1920px; height: 1080px; overflow: hidden; background: #0b0b0b; color: #FFFFFF; font-family: 'Archivo', sans-serif">
+<img src="assets/bg_mor.jpg" alt="" style="position: absolute; inset: 0; width: 1920px; height: 1080px; object-fit: cover; object-position: 50% 60%">
+<div style="position: absolute; inset: 0; background: rgba(0,0,0,{{dim}})"></div>
+<img src="foto/moblack.jpg" alt="MOBLACK" style="position: absolute; top: 0; right: 0; width: 1150px; height: 1080px; object-fit: cover; object-position: 32% 20%; -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 40%); mask-image: linear-gradient(to right, transparent 0%, #000 40%)">
+<div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.55), rgba(0,0,0,0) 35%)"></div>
+<img src="assets/aboutevents.png" alt="About Events" style="position: absolute; top: 90px; left: 100px; height: 56px; width: auto">
+<div style="position: absolute; left: 100px; width: 760px; top: 130px; bottom: 270px; display: flex; flex-direction: column; justify-content: center; gap: 26px; text-shadow: 0 2px 14px rgba(0,0,0,0.7)">
+<div style="font-family: 'IBM Plex Mono', monospace; font-weight: 600; font-size: 30px; color: {{accent}}">28 KASIM CUMARTESİ · KAPI 21:00</div>
+<div style="font-weight: 900; font-stretch: 62%; font-size: 86px; line-height: 0.88; letter-spacing: -2px">BU CUMARTESİ<br><span style="color: {{accent}}">KLEIN PHÖNIX&#39;TE.</span></div>
+<div style="font-weight: 900; font-stretch: 62%; font-size: 190px; line-height: 0.82; letter-spacing: -4px; margin-top: 6px">MOBLACK</div>
+<div style="font-weight: 900; font-stretch: 62%; font-size: 36px; line-height: 1">AFRO HOUSE&#39;UN İKONİK SESİ.</div>
+<div style="font-family: 'IBM Plex Mono', monospace; font-weight: 600; font-size: 30px; line-height: 1.55">BITE THE DUST<br>BATU<br>EREN YILDIZ</div>
+</div>
+<img src="assets/klein.png" alt="Klein Phönix" style="position: absolute; left: 100px; bottom: 80px; width: 100px; height: auto">
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#F1780E","options":["#F1780E","#FFFFFF","#111111"]},"dim":{"editor":"range","default":0.35,"min":0,"max":0.7,"step":0.05},"$preview":{"width":1920,"height":1080}}'>
+class Component extends DCLogic {
+renderVals() {
+return { accent: this.props.accent ?? '#F1780E', dim: this.props.dim ?? 0.35 };
+}
+}
+</script>
+</body>
+</html>

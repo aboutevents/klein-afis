@@ -6,6 +6,10 @@ on:
     - cron: "50 7 * * *"
     # 09:50 UTC = 12:50 İstanbul (Pzt–Cmt) → Kastel (kastel/haftalar/). Story ~13:00'te düşer.
     - cron: "50 9 * * 1-6"
+    # 11:50 UTC = 14:50 İstanbul (Pzt–Cmt) → Izaka (izaka/haftalar/). Story ~15:00'te düşer.
+    - cron: "50 11 * * 1-6"
+    # 13:50 UTC = 16:50 İstanbul (Pzt–Cmt) → ARTI2 (arti2/haftalar/). Story ~17:00'de düşer.
+    - cron: "50 13 * * 1-6"
   workflow_dispatch:
     inputs:
       mode:
@@ -18,10 +22,10 @@ on:
         default: ""
         required: false
       hesap:
-        description: "Hangi afişler: klein (haftalar/) · kastel (kastel/haftalar/) · hepsi"
+        description: "Hangi afişler: klein (haftalar/) · kastel · izaka · arti2 · hepsi"
         default: "klein"
         type: choice
-        options: [klein, kastel, hepsi]
+        options: [klein, kastel, izaka, arti2, hepsi]
 
 permissions:
   contents: write
@@ -46,15 +50,31 @@ jobs:
           IG_TOKEN: ${{ secrets.IG_TOKEN }}
           MODE: ${{ github.event_name == 'schedule' && 'publish' || inputs.mode }}
           DATE: ${{ inputs.date }}
-          BASE: ${{ github.event_name == 'schedule' && (github.event.schedule == '50 9 * * 1-6' && 'kastel/haftalar' || 'haftalar') || (inputs.hesap == 'kastel' && 'kastel/haftalar' || (inputs.hesap == 'hepsi' && 'haftalar,kastel/haftalar' || 'haftalar')) }}
-        run: python3 scripts/post_story.py
+          SCHED: ${{ github.event.schedule }}
+          HESAP: ${{ inputs.hesap }}
+        run: |
+          case "$SCHED" in
+            "50 9 * * 1-6")  BASE=kastel/haftalar ;;
+            "50 11 * * 1-6") BASE=izaka/haftalar ;;
+            "50 13 * * 1-6") BASE=arti2/haftalar ;;
+            "50 7 * * *")    BASE=haftalar ;;
+            *) case "$HESAP" in
+                 kastel) BASE=kastel/haftalar ;;
+                 izaka)  BASE=izaka/haftalar ;;
+                 arti2)  BASE=arti2/haftalar ;;
+                 hepsi)  BASE=haftalar,kastel/haftalar,izaka/haftalar,arti2/haftalar ;;
+                 *)      BASE=haftalar ;;
+               esac ;;
+          esac
+          export BASE
+          python3 scripts/post_story.py
       - name: Paylaşım kaydını kaydet
         if: always()
         run: |
-          if [ -n "$(git status --porcelain haftalar kastel/haftalar performans.csv)" ]; then
+          if [ -n "$(git status --porcelain haftalar kastel/haftalar izaka/haftalar arti2/haftalar performans.csv)" ]; then
             git config user.name "klein-story-bot"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add haftalar kastel/haftalar
+            git add haftalar kastel/haftalar izaka/haftalar arti2/haftalar
             [ -f performans.csv ] && git add performans.csv
             git commit -m "Story paylaşım kaydı $(date -u +%F)"
             git pull --rebase --autostash || true
