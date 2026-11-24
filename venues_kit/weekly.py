@@ -11,19 +11,21 @@ css = open(os.path.join(HERE, 'fonts.css')).read().replace('{F}', F)
 M = "font-family:'IBM Plex Mono',monospace;font-weight:600"; C = "font-family:'Archivo';font-weight:900;font-stretch:62%"
 acc = cfg['accent']
 def f(p): return 'file://' + (p if p.startswith('/') else os.path.join(A, p))
-def card(n, vertical):
-    sup = '<br>'.join(n['support'])
-    fs = n.get('head_size', 84)
+def card(n, vertical, fs, nsup):
+    sup = '<br>'.join(n['support'] + ['&nbsp;'] * (nsup - len(n['support'])))
     return f'''<div style="position:relative;overflow:hidden;background:#0d0d0d">
 <img src="{f(n['photo'])}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:{n.get('pos','50% 30%')}">
 <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.92) 0%,rgba(0,0,0,.55) 42%,rgba(0,0,0,0) 75%)"></div>
 <div style="position:absolute;left:34px;right:30px;bottom:32px;display:flex;flex-direction:column;gap:12px;text-shadow:0 2px 12px rgba(0,0,0,.8)">
 <div style="{M};font-size:24px;color:{acc};line-height:1.4">{n['date']}<br>{n['time']}</div>
-<div style="{C};font-size:{fs}px;line-height:.9">{n['head']}</div>
+<div style="{C};font-size:{fs}px;line-height:.9;white-space:nowrap">{n['head']}</div>
 <div style="{M};font-size:{n.get('sup_size',20)}px;line-height:1.5">{sup}</div></div></div>'''
 def page(w, h):
     v = h > w
-    cards = ''.join(card(n, v) for n in cfg['nights'])
+    k = len(cfg['nights']); cw = ((w - (160 if v else 200)) - 24 * (k - 1)) / k - 64
+    fs = int(min(84, min(cw / (len(n['head']) * 0.5) for n in cfg['nights'])))
+    nsup = max(len(n['support']) for n in cfg['nights'])
+    cards = ''.join(card(n, v, fs, nsup) for n in cfg['nights'])
     grid = (f'left:80px;right:80px;top:700px;bottom:110px;grid-template-columns:repeat({len(cfg["nights"])},minmax(0,1fr))' if v
             else f'left:100px;right:100px;top:380px;bottom:90px;grid-template-columns:repeat({len(cfg["nights"])},minmax(0,1fr))')
     head = (f'''<div style="position:absolute;left:80px;right:80px;top:380px;display:flex;flex-direction:column;gap:22px;text-shadow:0 2px 14px rgba(0,0,0,.7)">

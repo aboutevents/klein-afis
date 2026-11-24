@@ -1,1 +1,37 @@
-{"accent": "#E0413F", "venue_title": "ARTI2&#39;DE.", "dates": "27–28 KASIM · CUMA &amp; CUMARTESİ", "logo": "assets/arti2_white.png", "logo_w": 110, "bg": "assets/arti2_bg.jpg", "bg_pos": "50% 40%", "foot_l": "ARTI2 · ŞİŞLİ", "foot_r": "@ARTI2ISTANBUL", "nights": [{"date": "27 KASIM CUMA", "time": "19:30–01:30", "head": "GWEN DE LIEN", "support": ["FLBG · CANMILESS", "THE DREAMER · FATA", "ALCN · JHERO · IBIS · AIZLINES"], "photo": "assets/arti2_27.jpg", "pos": "50% 40%"}, {"date": "28 KASIM CUMARTESİ", "time": "19:30–01:30", "head": "ÖZGÜR BAY", "support": ["EFECAN SARAL", "OUZ &amp; SARPER", "BAHAR SILI"], "photo": "assets/arti2_28.jpg", "pos": "50% 30%"}]}
+{
+ "accent": "#E0413F",
+ "venue_title": "ARTI2&#39;DE.",
+ "dates": "27–28 KASIM · CUMA &amp; CUMARTESİ",
+ "logo": "assets/arti2_white.png",
+ "logo_w": 110,
+ "bg": "assets/arti2_bg.jpg",
+ "bg_pos": "50% 40%",
+ "foot_l": "ARTI2 · ŞİŞLİ",
+ "foot_r": "@ARTI2ISTANBUL",
+ "nights": [
+  {
+   "date": "27 KASIM CUMA",
+   "time": "19:30–01:30",
+   "head": "GWEN DE LIEN",
+   "support": [
+    "FLBG · CANMILESS",
+    "THE DREAMER · FATA",
+    "ALCN · JHERO · IBIS · AIZLINES"
+   ],
+   "photo": "assets/izaka_gwen.jpg",
+   "pos": "26% 30%"
+  },
+  {
+   "date": "28 KASIM CUMARTESİ",
+   "time": "19:30–01:30",
+   "head": "ÖZGÜR BAY",
+   "support": [
+    "EFECAN SARAL",
+    "OUZ &amp; SARPER",
+    "BAHAR SILI"
+   ],
+   "photo": "assets/izaka_ozgur.jpg",
+   "pos": "40% 20%"
+  }
+ ]
+}
