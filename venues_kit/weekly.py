@@ -13,16 +13,22 @@ acc = cfg['accent']
 def f(p): return 'file://' + (p if p.startswith('/') else os.path.join(A, p))
 def card(n, vertical, fs, nsup):
     sup = '<br>'.join(n['support'] + ['&nbsp;'] * (nsup - len(n['support'])))
+    if vertical:
+        photo = (f'<img src="{f(n["photo"])}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:{n.get("pos","50% 30%")}">'
+                 '<div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.92) 0%,rgba(0,0,0,.55) 42%,rgba(0,0,0,0) 75%)"></div>')
+    else:
+        # yatay: fotoğraf kartın sağında, yazılar solda (yüzün üstüne yazı binmez)
+        photo = (f'<img src="{f(n["photo"])}" style="position:absolute;top:0;right:0;width:58%;height:100%;object-fit:cover;object-position:{n.get("pos_h", n.get("pos","50% 30%"))}">'
+                 '<div style="position:absolute;inset:0;background:linear-gradient(to right,rgba(13,13,13,1) 40%,rgba(13,13,13,.55) 48%,rgba(13,13,13,0) 62%)"></div>')
     return f'''<div style="position:relative;overflow:hidden;background:#0d0d0d">
-<img src="{f(n['photo'])}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:{n.get('pos','50% 30%')}">
-<div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.92) 0%,rgba(0,0,0,.55) 42%,rgba(0,0,0,0) 75%)"></div>
-<div style="position:absolute;left:34px;right:30px;bottom:32px;display:flex;flex-direction:column;gap:12px;text-shadow:0 2px 12px rgba(0,0,0,.8)">
+{photo}
+<div style="position:absolute;left:34px;right:{'30px' if vertical else '50%'};bottom:32px;display:flex;flex-direction:column;gap:12px;text-shadow:0 2px 12px rgba(0,0,0,.8)">
 <div style="{M};font-size:24px;color:{acc};line-height:1.4">{n['date']}<br>{n['time']}</div>
 <div style="{C};font-size:{fs}px;line-height:.9;white-space:nowrap">{n['head']}</div>
 <div style="{M};font-size:{n.get('sup_size',20)}px;line-height:1.5">{sup}</div></div></div>'''
 def page(w, h):
     v = h > w
-    k = len(cfg['nights']); cw = ((w - (160 if v else 200)) - 24 * (k - 1)) / k - 64
+    k = len(cfg['nights']); cw = (((w - (160 if v else 200)) - 24 * (k - 1)) / k) * (1 if v else 0.5) - (64 if v else 40)
     fs = int(min(84, min(cw / (len(n['head']) * 0.5) for n in cfg['nights'])))
     nsup = max(len(n['support']) for n in cfg['nights'])
     cards = ''.join(card(n, v, fs, nsup) for n in cfg['nights'])

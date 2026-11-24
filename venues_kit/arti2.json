@@ -19,7 +19,8 @@
     "ALCN · JHERO · IBIS · AIZLINES"
    ],
    "photo": "assets/arti2_gwen.jpg",
-   "pos": "30% 12%"
+   "pos": "30% 12%",
+   "pos_h": "30% 15%"
   },
   {
    "date": "28 KASIM CUMARTESİ",
@@ -31,7 +32,8 @@
     "BAHAR SILI"
    ],
    "photo": "assets/arti2_ozgur.jpg",
-   "pos": "45% 20%"
+   "pos": "45% 20%",
+   "pos_h": "45% 20%"
   }
  ]
 }
