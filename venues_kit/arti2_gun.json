@@ -1,0 +1,29 @@
+{
+ "accent": "#E0413F",
+ "venue_title": "ARTI2&#39;DE.",
+ "dates": "",
+ "logo": "assets/arti2_white.png",
+ "logo_w": 110,
+ "bg": "assets/arti2_bg.jpg",
+ "bg_pos": "50% 40%",
+ "foot_l": "ARTI2 · ŞİŞLİ",
+ "foot_r": "@ARTI2ISTANBUL",
+ "nights": [
+  {
+   "date": "27 KASIM CUMA",
+   "time": "19:30–01:30",
+   "head": "GWEN DE LIEN",
+   "support": [
+    "FLBG · CANMILESS",
+    "THE DREAMER · FATA",
+    "ALCN · JHERO · IBIS · AIZLINES"
+   ],
+   "photo": "assets/arti2_gwen.jpg",
+   "pos": "30% 12%",
+   "pos_h": "30% 15%",
+   "sup_size": 24
+  }
+ ],
+ "kicker": "BU AKŞAM",
+ "max_head": 120
+}

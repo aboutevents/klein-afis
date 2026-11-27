@@ -29,16 +29,16 @@ def card(n, vertical, fs, nsup):
 def page(w, h):
     v = h > w
     k = len(cfg['nights']); cw = (((w - (160 if v else 200)) - 24 * (k - 1)) / k) * (1 if v else 0.5) - (64 if v else 40)
-    fs = int(min(84, min(cw / (len(n['head']) * 0.5) for n in cfg['nights'])))
+    fs = int(min(cfg.get('max_head', 84), min(cw / (len(n['head']) * 0.5) for n in cfg['nights'])))
     nsup = max(len(n['support']) for n in cfg['nights'])
     cards = ''.join(card(n, v, fs, nsup) for n in cfg['nights'])
     grid = (f'left:80px;right:80px;top:700px;bottom:110px;grid-template-columns:repeat({len(cfg["nights"])},minmax(0,1fr))' if v
             else f'left:100px;right:100px;top:380px;bottom:90px;grid-template-columns:repeat({len(cfg["nights"])},minmax(0,1fr))')
     head = (f'''<div style="position:absolute;left:80px;right:80px;top:380px;display:flex;flex-direction:column;gap:22px;text-shadow:0 2px 14px rgba(0,0,0,.7)">
 <div style="{M};font-size:28px">{cfg['dates']}</div>
-<div style="{C};font-size:104px;line-height:.9;letter-spacing:-1px">BU HAFTA<br><span style="color:{acc}">{cfg['venue_title']}</span></div></div>''' if v else
+<div style="{C};font-size:104px;line-height:.9;letter-spacing:-1px">{cfg.get('kicker','BU HAFTA')}<br><span style="color:{acc}">{cfg['venue_title']}</span></div></div>''' if v else
             f'''<div style="position:absolute;left:100px;right:100px;top:150px;display:flex;justify-content:space-between;align-items:flex-end;text-shadow:0 2px 14px rgba(0,0,0,.7)">
-<div style="{C};font-size:80px;line-height:.92;letter-spacing:-1px">BU HAFTA<br><span style="color:{acc}">{cfg['venue_title']}</span></div>
+<div style="{C};font-size:80px;line-height:.92;letter-spacing:-1px">{cfg.get('kicker','BU HAFTA')}<br><span style="color:{acc}">{cfg['venue_title']}</span></div>
 <div style="{M};font-size:28px;padding-bottom:8px;margin-right:{cfg['logo_w']+40}px">{cfg['dates']}</div></div>''')
     lw = cfg['logo_w'] * (1.25 if v else 1)
     logo = f'<img src="{f(cfg["logo"])}" style="position:absolute;top:{90 if v else 90}px;right:{80 if v else 100}px;width:{lw}px">'
