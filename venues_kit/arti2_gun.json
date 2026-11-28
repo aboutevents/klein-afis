@@ -10,17 +10,17 @@
  "foot_r": "@ARTI2ISTANBUL",
  "nights": [
   {
-   "date": "27 KASIM CUMA",
+   "date": "28 KASIM CUMARTESİ",
    "time": "19:30–01:30",
-   "head": "GWEN DE LIEN",
+   "head": "ÖZGÜR BAY",
    "support": [
-    "FLBG · CANMILESS",
-    "THE DREAMER · FATA",
-    "ALCN · JHERO · IBIS · AIZLINES"
+    "EFECAN SARAL",
+    "OUZ &amp; SARPER",
+    "BAHAR SILI"
    ],
-   "photo": "assets/arti2_gwen.jpg",
-   "pos": "30% 12%",
-   "pos_h": "30% 15%",
+   "photo": "assets/arti2_ozgur.jpg",
+   "pos": "45% 20%",
+   "pos_h": "45% 20%",
    "sup_size": 24
   }
  ],

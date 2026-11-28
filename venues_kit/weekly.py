@@ -18,7 +18,7 @@ def card(n, vertical, fs, nsup):
                  '<div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.92) 0%,rgba(0,0,0,.55) 42%,rgba(0,0,0,0) 75%)"></div>')
     else:
         # yatay: fotoğraf kartın sağında, yazılar solda (yüzün üstüne yazı binmez)
-        photo = (f'<img src="{f(n["photo"])}" style="position:absolute;top:0;right:0;width:58%;height:100%;object-fit:cover;object-position:{n.get("pos_h", n.get("pos","50% 30%"))}">'
+        photo = (f'<img src="{f(n["photo"])}" style="position:absolute;top:0;right:0;width:58%;height:100%;object-fit:cover;object-position:{n.get("pos_h", n.get("pos","50% 30%"))};-webkit-mask-image:linear-gradient(to right,transparent 0%,#000 30%);mask-image:linear-gradient(to right,transparent 0%,#000 30%)">'
                  '<div style="position:absolute;inset:0;background:linear-gradient(to right,rgba(13,13,13,1) 40%,rgba(13,13,13,.55) 48%,rgba(13,13,13,0) 62%)"></div>')
     return f'''<div style="position:relative;overflow:hidden;background:#0d0d0d">
 {photo}
